@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
-  Box,
-  Button,
   Card,
   CardContent,
   CardHeader,
@@ -13,21 +11,6 @@ import {
   makeStyles
 } from '@material-ui/core';
 
-const states = [
-  {
-    value: 'alabama',
-    label: 'Alabama'
-  },
-  {
-    value: 'new-york',
-    label: 'New York'
-  },
-  {
-    value: 'san-francisco',
-    label: 'San Francisco'
-  }
-];
-
 const useStyles = makeStyles(() => ({
   root: {}
 }));
@@ -35,12 +18,14 @@ const useStyles = makeStyles(() => ({
 const ProfileDetails = ({ className, ...rest }) => {
   const classes = useStyles();
   const [values, setValues] = useState({
-    firstName: 'Katarina',
-    lastName: 'Smith',
+    fullName: 'Katarina',
     email: 'demo@devias.io',
-    phone: '',
+    phone1: '123123',
+    phone2: '343566',
     state: 'Alabama',
-    country: 'USA'
+    address: 'USA',
+    billno: '1234',
+    billdate: '2017-05-24T10:30'
   });
 
   const handleChange = (event) => {
@@ -59,8 +44,7 @@ const ProfileDetails = ({ className, ...rest }) => {
     >
       <Card>
         <CardHeader
-          subheader="The information can be edited"
-          title="Profile"
+          title="Customer Invoice Information"
         />
         <Divider />
         <CardContent>
@@ -75,12 +59,12 @@ const ProfileDetails = ({ className, ...rest }) => {
             >
               <TextField
                 fullWidth
-                helperText="Please specify the first name"
-                label="First name"
-                name="firstName"
+                helperText="Please specify the full name"
+                label="Full name"
+                name="fullName"
                 onChange={handleChange}
                 required
-                value={values.firstName}
+                value={values.fullName}
                 variant="outlined"
               />
             </Grid>
@@ -91,12 +75,13 @@ const ProfileDetails = ({ className, ...rest }) => {
             >
               <TextField
                 fullWidth
-                label="Last name"
-                name="lastName"
+                label="Address"
+                name="address"
                 onChange={handleChange}
-                required
-                value={values.lastName}
+                value={values.address}
                 variant="outlined"
+                multiline
+                rows={3}
               />
             </Grid>
             <Grid
@@ -106,26 +91,11 @@ const ProfileDetails = ({ className, ...rest }) => {
             >
               <TextField
                 fullWidth
-                label="Email Address"
-                name="email"
-                onChange={handleChange}
-                required
-                value={values.email}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Phone Number"
-                name="phone"
+                label="Phone Number 1"
+                name="phone1"
                 onChange={handleChange}
                 type="number"
-                value={values.phone}
+                value={values.phone1}
                 variant="outlined"
               />
             </Grid>
@@ -136,11 +106,11 @@ const ProfileDetails = ({ className, ...rest }) => {
             >
               <TextField
                 fullWidth
-                label="Country"
-                name="country"
+                label="Phone Number 2"
+                name="phone2"
                 onChange={handleChange}
-                required
-                value={values.country}
+                type="number"
+                value={values.phone2}
                 variant="outlined"
               />
             </Grid>
@@ -151,40 +121,35 @@ const ProfileDetails = ({ className, ...rest }) => {
             >
               <TextField
                 fullWidth
-                label="Select State"
-                name="state"
+                label="Bill Number"
+                name="billno"
                 onChange={handleChange}
-                required
-                select
-                SelectProps={{ native: true }}
-                value={values.state}
+                type="number"
+                value={values.billno}
                 variant="outlined"
-              >
-                {states.map((option) => (
-                  <option
-                    key={option.value}
-                    value={option.value}
-                  >
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
+              />
             </Grid>
+            <Grid
+              item
+              md={6}
+              xs={12}
+            >
+              <TextField
+                id="datetime-local"
+                label="Bill Date"
+                type="datetime-local"
+                name="billdate"
+                onChange={handleChange}
+                value={values.billdate}
+                className={classes.billdate}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
+
           </Grid>
         </CardContent>
-        <Divider />
-        <Box
-          display="flex"
-          justifyContent="flex-end"
-          p={2}
-        >
-          <Button
-            color="primary"
-            variant="contained"
-          >
-            Save details
-          </Button>
-        </Box>
       </Card>
     </form>
   );

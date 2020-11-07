@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
-  Avatar,
   Box,
   Card,
   Checkbox,
@@ -15,14 +14,26 @@ import {
   TablePagination,
   TableRow,
   Typography,
-  makeStyles
+  makeStyles,
 } from '@material-ui/core';
-import getInitials from 'src/utils/getInitials';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
   avatar: {
     marginRight: theme.spacing(2)
+  },
+  button: {
+    color: theme.palette.text.secondary,
+    fontWeight: theme.typography.fontWeightMedium,
+    justifyContent: 'flex-start',
+    letterSpacing: 0,
+    padding: '10px 8px',
+    textTransform: 'none',
+    width: '100%',
+    textAlign: 'left'
+  },
+  row: {
+    cursor: 'pointer'
   }
 }));
 
@@ -94,28 +105,35 @@ const Results = ({ className, customers, ...rest }) => {
                   />
                 </TableCell>
                 <TableCell>
-                  Name
+                  ID
                 </TableCell>
                 <TableCell>
-                  Email
+                  Customer Name
                 </TableCell>
                 <TableCell>
-                  Location
+                  Total Bill
+                </TableCell>
+                <TableCell>
+                  Customer Email
+                </TableCell>
+                <TableCell>
+                  Customer Address
                 </TableCell>
                 <TableCell>
                   Phone
                 </TableCell>
                 <TableCell>
-                  Registration date
+                  Billed Date
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {customers.slice(0, limit).map((customer) => (
+              {customers.slice(0, limit).map((customer, index) => (
                 <TableRow
                   hover
                   key={customer.id}
                   selected={selectedCustomerIds.indexOf(customer.id) !== -1}
+                  className={classes.row}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox
@@ -125,16 +143,13 @@ const Results = ({ className, customers, ...rest }) => {
                     />
                   </TableCell>
                   <TableCell>
+                    {index + 1}
+                  </TableCell>
+                  <TableCell>
                     <Box
                       alignItems="center"
                       display="flex"
                     >
-                      <Avatar
-                        className={classes.avatar}
-                        src={customer.avatarUrl}
-                      >
-                        {getInitials(customer.name)}
-                      </Avatar>
                       <Typography
                         color="textPrimary"
                         variant="body1"
@@ -142,6 +157,9 @@ const Results = ({ className, customers, ...rest }) => {
                         {customer.name}
                       </Typography>
                     </Box>
+                  </TableCell>
+                  <TableCell>
+                    {customer.amount}
                   </TableCell>
                   <TableCell>
                     {customer.email}

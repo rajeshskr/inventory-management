@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
@@ -12,67 +12,70 @@ import {
   makeStyles
 } from '@material-ui/core';
 import { Search as SearchIcon } from 'react-feather';
+import InvoiceListModal from 'src/views/account/AccountView/InvoiceListModal';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
-  importButton: {
-    marginRight: theme.spacing(1)
+  deleteButton: {
+    marginLeft: theme.spacing(2)
   },
-  exportButton: {
-    marginRight: theme.spacing(1)
+  search: {
+    maxWidth: 400,
+    marginLeft: theme.spacing(2)
   }
 }));
 
 const Toolbar = ({ className, ...rest }) => {
   const classes = useStyles();
+  const [open, setOpen] = useState(false);
+  const handleClose = () => setOpen(false);
+  const handleOpen = () => setOpen(true);
 
   return (
     <div
       className={clsx(classes.root, className)}
       {...rest}
     >
-      <Box
-        display="flex"
-        justifyContent="flex-end"
-      >
-        <Button className={classes.importButton}>
-          Import
-        </Button>
-        <Button className={classes.exportButton}>
-          Export
-        </Button>
-        <Button
-          color="primary"
-          variant="contained"
-        >
-          Add customer
-        </Button>
-      </Box>
       <Box mt={3}>
         <Card>
           <CardContent>
-            <Box maxWidth={500}>
-              <TextField
-                fullWidth
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SvgIcon
-                        fontSize="small"
-                        color="action"
-                      >
-                        <SearchIcon />
-                      </SvgIcon>
-                    </InputAdornment>
-                  )
-                }}
-                placeholder="Search customer"
-                variant="outlined"
-              />
-            </Box>
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={handleOpen}
+            >
+              Add invoice
+            </Button>
+            <Button
+              className={classes.deleteButton}
+              color="primary"
+              variant="contained"
+            >
+              Delete
+            </Button>
+            <TextField
+              className={classes.search}
+              size="small"
+              fullWidth
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SvgIcon
+                      fontSize="small"
+                      color="action"
+                    >
+                      <SearchIcon />
+                    </SvgIcon>
+                  </InputAdornment>
+                )
+              }}
+              placeholder="Search customer"
+              variant="outlined"
+            />
           </CardContent>
         </Card>
       </Box>
+      <InvoiceListModal open={open} handleClose={handleClose} />
     </div>
   );
 };
