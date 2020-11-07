@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
@@ -12,7 +12,6 @@ import {
   makeStyles
 } from '@material-ui/core';
 import { Search as SearchIcon } from 'react-feather';
-import InvoiceListModal from 'src/views/account/AccountView/InvoiceListModal';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -25,11 +24,8 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Toolbar = ({ className, ...rest }) => {
+const Toolbar = ({ className, addInvoice, ...rest }) => {
   const classes = useStyles();
-  const [open, setOpen] = useState(false);
-  const handleClose = () => setOpen(false);
-  const handleOpen = () => setOpen(true);
 
   return (
     <div
@@ -42,7 +38,7 @@ const Toolbar = ({ className, ...rest }) => {
             <Button
               color="primary"
               variant="contained"
-              onClick={handleOpen}
+              onClick={addInvoice}
             >
               Add invoice
             </Button>
@@ -75,13 +71,13 @@ const Toolbar = ({ className, ...rest }) => {
           </CardContent>
         </Card>
       </Box>
-      <InvoiceListModal open={open} handleClose={handleClose} />
     </div>
   );
 };
 
 Toolbar.propTypes = {
-  className: PropTypes.string
+  className: PropTypes.string,
+  addInvoice: PropTypes.func
 };
 
 export default Toolbar;

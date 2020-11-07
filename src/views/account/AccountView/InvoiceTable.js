@@ -124,47 +124,50 @@ const InvoiceTable = ({ className, customers, ...rest }) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {customers.slice(0, limit).map((customer, index) => (
-                    <TableRow
-                      hover
-                      key={customer.id}
-                      selected={selectedCustomerIds.indexOf(customer.id) !== -1}
-                      className={classes.row}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={selectedCustomerIds.indexOf(customer.id) !== -1}
-                          onChange={(event) => handleSelectOne(event, customer.id)}
-                          value="true"
-                        />
-                      </TableCell>
-                      <TableCell>
-                        {index + 1}
-                      </TableCell>
-                      <TableCell>
-                        <Box
-                          alignItems="center"
-                          display="flex"
-                        >
-                          <Typography
-                            color="textPrimary"
-                            variant="body1"
+                  {customers.slice(0, limit).map((customer, index) => {
+                    const { itemName, quantity, price } = customer;
+                    return (
+                      <TableRow
+                        hover
+                        key={index}
+                        selected={selectedCustomerIds.indexOf(customer.id) !== -1}
+                        className={classes.row}
+                      >
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            checked={selectedCustomerIds.indexOf(customer.id) !== -1}
+                            onChange={(event) => handleSelectOne(event, customer.id)}
+                            value="true"
+                          />
+                        </TableCell>
+                        <TableCell>
+                          {index + 1}
+                        </TableCell>
+                        <TableCell>
+                          <Box
+                            alignItems="center"
+                            display="flex"
                           >
-                            {customer.name}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        {customer.amount}
-                      </TableCell>
-                      <TableCell>
-                        {customer.email}
-                      </TableCell>
-                      <TableCell>
-                        {`${customer.address.city}, ${customer.address.state}, ${customer.address.country}`}
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                            <Typography
+                              color="textPrimary"
+                              variant="body1"
+                            >
+                              {itemName}
+                            </Typography>
+                          </Box>
+                        </TableCell>
+                        <TableCell>
+                          {price}
+                        </TableCell>
+                        <TableCell>
+                          {quantity}
+                        </TableCell>
+                        <TableCell>
+                          { `Rs. ${parseInt(quantity) * parseInt(price)}`}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </Box>

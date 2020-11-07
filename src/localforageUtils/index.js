@@ -4,6 +4,10 @@ const name = 'inventory';
 const storeName = 'inventoryStore';
 const key = 'invoices';
 
+export const getInvoices = () => localforage.getItem(key);
+
+export const setInvoices = (value) => localforage.setItem(key, value);
+
 // eslint-disable-next-line import/prefer-default-export
 export const initialize = () => {
   localforage.config({ name, storeName });

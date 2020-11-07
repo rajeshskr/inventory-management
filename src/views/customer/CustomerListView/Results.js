@@ -15,6 +15,7 @@ import {
   TableRow,
   Typography,
   makeStyles,
+  CardContent,
 } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
@@ -37,7 +38,9 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Results = ({ className, customers, ...rest }) => {
+const Results = ({
+  className, customers, editInvoice, ...rest
+}) => {
   const classes = useStyles();
   const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
   const [limit, setLimit] = useState(10);
@@ -88,113 +91,131 @@ const Results = ({ className, customers, ...rest }) => {
       className={clsx(classes.root, className)}
       {...rest}
     >
-      <PerfectScrollbar>
-        <Box minWidth={1050}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={selectedCustomerIds.length === customers.length}
-                    color="primary"
-                    indeterminate={
+      {
+      !customers.length ? (
+        <CardContent>
+          <Typography
+            color="textPrimary"
+            variant="h5"
+            align="center"
+          >
+            No Data available
+          </Typography>
+        </CardContent>
+      ) : (
+        <>
+          <PerfectScrollbar>
+            <Box minWidth={1050}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        checked={selectedCustomerIds.length === customers.length}
+                        color="primary"
+                        indeterminate={
                       selectedCustomerIds.length > 0
                       && selectedCustomerIds.length < customers.length
                     }
-                    onChange={handleSelectAll}
-                  />
-                </TableCell>
-                <TableCell>
-                  ID
-                </TableCell>
-                <TableCell>
-                  Customer Name
-                </TableCell>
-                <TableCell>
-                  Total Bill
-                </TableCell>
-                <TableCell>
-                  Customer Email
-                </TableCell>
-                <TableCell>
-                  Customer Address
-                </TableCell>
-                <TableCell>
-                  Phone
-                </TableCell>
-                <TableCell>
-                  Billed Date
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {customers.slice(0, limit).map((customer, index) => (
-                <TableRow
-                  hover
-                  key={customer.id}
-                  selected={selectedCustomerIds.indexOf(customer.id) !== -1}
-                  className={classes.row}
-                >
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={selectedCustomerIds.indexOf(customer.id) !== -1}
-                      onChange={(event) => handleSelectOne(event, customer.id)}
-                      value="true"
-                    />
-                  </TableCell>
-                  <TableCell>
-                    {index + 1}
-                  </TableCell>
-                  <TableCell>
-                    <Box
-                      alignItems="center"
-                      display="flex"
+                        onChange={handleSelectAll}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      Bill No.
+                    </TableCell>
+                    <TableCell>
+                      Customer Name
+                    </TableCell>
+                    <TableCell>
+                      Phone 1
+                    </TableCell>
+                    <TableCell>
+                      Phone 2
+                    </TableCell>
+                    <TableCell>
+                      Customer Address
+                    </TableCell>
+                    <TableCell>
+                      Total Bill
+                    </TableCell>
+                    <TableCell>
+                      Billed Date
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {customers.slice(0, limit).map((customer, index) => (
+                    <TableRow
+                      hover
+                      key={index}
+                      selected={selectedCustomerIds.indexOf(customer.id) !== -1}
+                      className={classes.row}
+                      onClick={() => editInvoice(customer.billno)}
                     >
-                      <Typography
-                        color="textPrimary"
-                        variant="body1"
-                      >
-                        {customer.name}
-                      </Typography>
-                    </Box>
-                  </TableCell>
-                  <TableCell>
-                    {customer.amount}
-                  </TableCell>
-                  <TableCell>
-                    {customer.email}
-                  </TableCell>
-                  <TableCell>
-                    {`${customer.address.city}, ${customer.address.state}, ${customer.address.country}`}
-                  </TableCell>
-                  <TableCell>
-                    {customer.phone}
-                  </TableCell>
-                  <TableCell>
-                    {moment(customer.createdAt).format('DD/MM/YYYY')}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Box>
-      </PerfectScrollbar>
-      <TablePagination
-        component="div"
-        count={customers.length}
-        onChangePage={handlePageChange}
-        onChangeRowsPerPage={handleLimitChange}
-        page={page}
-        rowsPerPage={limit}
-        rowsPerPageOptions={[5, 10, 25]}
-      />
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          checked={selectedCustomerIds.indexOf(customer.id) !== -1}
+                          onChange={(event) => handleSelectOne(event, customer.id)}
+                          value="true"
+                        />
+                      </TableCell>
+                      <TableCell>
+                        {customer.billno}
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          alignItems="center"
+                          display="flex"
+                        >
+                          <Typography
+                            color="textPrimary"
+                            variant="body1"
+                          >
+                            {customer.fullName}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        {customer.phone1 || 'NA'}
+                      </TableCell>
+                      <TableCell>
+                        {customer.phone2 || 'NA'}
+                      </TableCell>
+                      <TableCell>
+                        {customer.address || 'NA'}
+                      </TableCell>
+                      <TableCell>
+                        {`Rs. ${(customer.amount || 0).toFixed(2)}`}
+                      </TableCell>
+                      <TableCell>
+                        {moment(customer.billdate).format('DD/MM/YYYY HH:mm A')}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Box>
+          </PerfectScrollbar>
+          <TablePagination
+            component="div"
+            count={customers.length}
+            onChangePage={handlePageChange}
+            onChangeRowsPerPage={handleLimitChange}
+            page={page}
+            rowsPerPage={limit}
+            rowsPerPageOptions={[5, 10, 25]}
+          />
+        </>
+      )
+}
     </Card>
   );
 };
 
 Results.propTypes = {
   className: PropTypes.string,
-  customers: PropTypes.array.isRequired
+  customers: PropTypes.array.isRequired,
+  editInvoice: PropTypes.func
 };
 
 export default Results;

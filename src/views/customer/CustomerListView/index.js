@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   Box,
   Container,
   makeStyles
 } from '@material-ui/core';
 import Page from 'src/components/Page';
+import DataContext from 'src/localforageUtils/DataContext';
+import InvoiceListModal from 'src/views/account/AccountView/InvoiceListModal';
 import Results from './Results';
 import Toolbar from './Toolbar';
-import data from './data';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,7 +21,22 @@ const useStyles = makeStyles((theme) => ({
 
 const CustomerListView = () => {
   const classes = useStyles();
-  const [customers] = useState(data);
+  const { invoices } = useContext(DataContext) || {};
+
+  const [open, setOpen] = useState(false);
+  const handleClose = () => setOpen(false);
+  const handleOpen = () => setOpen(true);
+  const [billno, setBillNo] = useState('');
+
+  const addInvoice = () => {
+    handleOpen();
+    setBillNo('');
+  };
+
+  const editInvoice = (no) => {
+    handleOpen();
+    setBillNo(no);
+  };
 
   return (
     <Page
@@ -28,11 +44,17 @@ const CustomerListView = () => {
       title="Furniture Point | Inventory Management System"
     >
       <Container maxWidth={false}>
-        <Toolbar />
+        <Toolbar addInvoice={addInvoice} />
         <Box mt={3}>
-          <Results customers={customers} />
+          <Results customers={invoices} editInvoice={editInvoice} />
         </Box>
       </Container>
+      <InvoiceListModal
+        open={open}
+        handleClose={handleClose}
+        billno={billno}
+        setBillNo={setBillNo}
+      />
     </Page>
   );
 };

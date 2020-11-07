@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
@@ -8,32 +8,29 @@ import {
   Divider,
   Grid,
   TextField,
-  makeStyles
+  makeStyles,
 } from '@material-ui/core';
 
-const useStyles = makeStyles(() => ({
-  root: {}
+const useStyles = makeStyles((theme) => ({
+  root: {},
+  button: {
+    marginLeft: 'auto',
+    marginRight: theme.spacing(1)
+  }
 }));
 
-const ProfileDetails = ({ className, ...rest }) => {
+const ProfileDetails = ({
+  className, values = {}, handleChange, ...rest
+}) => {
   const classes = useStyles();
-  const [values, setValues] = useState({
-    fullName: 'Katarina',
-    email: 'demo@devias.io',
-    phone1: '123123',
-    phone2: '343566',
-    state: 'Alabama',
-    address: 'USA',
-    billno: '1234',
-    billdate: '2017-05-24T10:30'
-  });
-
-  const handleChange = (event) => {
-    setValues({
-      ...values,
-      [event.target.name]: event.target.value
-    });
-  };
+  const {
+    fullName = '',
+    address = '',
+    phone1 = '',
+    phone2 = '',
+    billno = '',
+    billdate = ''
+  } = values;
 
   return (
     <form
@@ -59,12 +56,11 @@ const ProfileDetails = ({ className, ...rest }) => {
             >
               <TextField
                 fullWidth
-                helperText="Please specify the full name"
                 label="Full name"
                 name="fullName"
                 onChange={handleChange}
                 required
-                value={values.fullName}
+                value={fullName}
                 variant="outlined"
               />
             </Grid>
@@ -78,7 +74,7 @@ const ProfileDetails = ({ className, ...rest }) => {
                 label="Address"
                 name="address"
                 onChange={handleChange}
-                value={values.address}
+                value={address}
                 variant="outlined"
                 multiline
                 rows={3}
@@ -95,7 +91,7 @@ const ProfileDetails = ({ className, ...rest }) => {
                 name="phone1"
                 onChange={handleChange}
                 type="number"
-                value={values.phone1}
+                value={phone1}
                 variant="outlined"
               />
             </Grid>
@@ -110,7 +106,7 @@ const ProfileDetails = ({ className, ...rest }) => {
                 name="phone2"
                 onChange={handleChange}
                 type="number"
-                value={values.phone2}
+                value={phone2}
                 variant="outlined"
               />
             </Grid>
@@ -125,7 +121,7 @@ const ProfileDetails = ({ className, ...rest }) => {
                 name="billno"
                 onChange={handleChange}
                 type="number"
-                value={values.billno}
+                value={billno}
                 variant="outlined"
               />
             </Grid>
@@ -140,7 +136,7 @@ const ProfileDetails = ({ className, ...rest }) => {
                 type="datetime-local"
                 name="billdate"
                 onChange={handleChange}
-                value={values.billdate}
+                value={billdate}
                 className={classes.billdate}
                 InputLabelProps={{
                   shrink: true,
@@ -156,7 +152,9 @@ const ProfileDetails = ({ className, ...rest }) => {
 };
 
 ProfileDetails.propTypes = {
-  className: PropTypes.string
+  className: PropTypes.string,
+  handleChange: PropTypes.func,
+  values: PropTypes.object
 };
 
 export default ProfileDetails;

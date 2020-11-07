@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
@@ -8,22 +8,14 @@ import {
   Divider,
   makeStyles,
 } from '@material-ui/core';
-import data from 'src/views/customer/CustomerListView/data';
 import InvoiceTable from './InvoiceTable';
-import InvoiceItemForm from './InvoiceItemForm';
 
 const useStyles = makeStyles(() => ({
   root: {}
 }));
 
-const InvoiceList = ({ className, ...rest }) => {
+const InvoiceList = ({ className, items, ...rest }) => {
   const classes = useStyles();
-
-  const [customers] = useState(data);
-
-  const [open, setOpen] = useState(false);
-  const handleClose = () => setOpen(false);
-  const handleOpen = () => setOpen(true);
 
   return (
     <form
@@ -35,33 +27,24 @@ const InvoiceList = ({ className, ...rest }) => {
       <Card>
         <CardHeader
           action={(
-            <>
-              <Button
-                color="secondary"
-                onClick={handleOpen}
-              >
-                Add Item
-              </Button>
-              <Button
-                color="secondary"
-              >
-                Delete Items
-              </Button>
-            </>
-
+            <Button
+              color="secondary"
+            >
+              Delete Items
+            </Button>
         )}
-          title="Invoice List"
+          title="Invoice Items List"
         />
         <Divider />
-        <InvoiceTable customers={customers} />
+        <InvoiceTable customers={items} />
       </Card>
-      <InvoiceItemForm open={open} handleClose={handleClose} />
     </form>
   );
 };
 
 InvoiceList.propTypes = {
-  className: PropTypes.string
+  className: PropTypes.string,
+  items: PropTypes.array
 };
 
 export default InvoiceList;

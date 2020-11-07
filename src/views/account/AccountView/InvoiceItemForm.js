@@ -7,25 +7,28 @@ import {
   Grid,
   TextField,
   makeStyles,
-  Dialog,
-  DialogTitle,
-  DialogActions,
-  DialogContent
+  CardContent,
+  CardHeader,
+  Card,
+  Divider
 } from '@material-ui/core';
 
-const useStyles = makeStyles(() => ({
-  root: {}
+const useStyles = makeStyles((theme) => ({
+  root: {},
+  add: {
+    marginRight: theme.spacing(2)
+  }
 }));
 
 const InvoiceItemForm = ({
-  className, open, handleClose, ...rest
+  className,
+  open,
+  handleClose,
+  addItem,
+  ...rest
 }) => {
   const classes = useStyles();
-  const [values, setValues] = useState({
-    itemName: 'alabama',
-    quantity: '12',
-    price: '1234'
-  });
+  const [values, setValues] = useState({});
 
   const handleChange = (event) => {
     setValues({
@@ -34,17 +37,20 @@ const InvoiceItemForm = ({
     });
   };
 
+  const addInvoiceItem = () => {
+    addItem(values);
+    setValues({});
+  };
+
+  const { itemName = '', price = '', quantity = '' } = values;
+
   return (
-    <Dialog
-      fullWidth
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="max-width-dialog-title"
-    >
-      <DialogTitle id="max-width-dialog-title">
-        Enter Item Information
-      </DialogTitle>
-      <DialogContent>
+    <Card>
+
+      <CardHeader title="Enter Item Information" />
+      <Divider />
+
+      <CardContent>
         <form
           autoComplete="off"
           noValidate
@@ -66,7 +72,7 @@ const InvoiceItemForm = ({
                 name="itemName"
                 onChange={handleChange}
                 required
-                value={values.itemName}
+                value={itemName}
                 variant="outlined"
               />
             </Grid>
@@ -80,7 +86,7 @@ const InvoiceItemForm = ({
                 label="Quantity"
                 name="quantity"
                 onChange={handleChange}
-                value={values.quantity}
+                value={quantity}
                 variant="outlined"
               />
             </Grid>
@@ -94,36 +100,37 @@ const InvoiceItemForm = ({
                 name="price"
                 onChange={handleChange}
                 type="number"
-                value={values.price}
+                value={price}
                 variant="outlined"
               />
             </Grid>
           </Grid>
-          <DialogActions>
-            <Box
-              display="flex"
-              justifyContent="flex-end"
-              p={1}
-            >
-              <Button
-                color="primary"
-                variant="contained"
-              >
-                Save
-              </Button>
-            </Box>
-          </DialogActions>
 
         </form>
-      </DialogContent>
-    </Dialog>
+      </CardContent>
+      <Divider />
+      <Box
+        display="flex"
+        justifyContent="flex-end"
+        p={1}
+      >
+        <Button
+          color="primary"
+          className={classes.add}
+          onClick={addInvoiceItem}
+        >
+          Add To List
+        </Button>
+      </Box>
+    </Card>
   );
 };
 
 InvoiceItemForm.propTypes = {
   className: PropTypes.string,
   open: PropTypes.bool,
-  handleClose: PropTypes.func
+  handleClose: PropTypes.func,
+  addItem: PropTypes.func
 };
 
 export default InvoiceItemForm;

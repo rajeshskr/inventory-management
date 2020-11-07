@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Container,
   Grid,
@@ -7,6 +8,7 @@ import {
 import Page from 'src/components/Page';
 import ProfileDetails from './ProfileDetails';
 import InvoiceList from './InvoiceList';
+import InvoiceItemForm from './InvoiceItemForm';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,8 +23,15 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Account = () => {
+const Account = ({
+  billno,
+  invoice,
+  addItem,
+  handleChange
+}) => {
   const classes = useStyles();
+
+  const { items = [] } = invoice || {};
 
   return (
     <Page
@@ -39,19 +48,36 @@ const Account = () => {
             item
             xs={12}
           >
-            <ProfileDetails />
+            <ProfileDetails
+              billno={billno}
+              values={invoice}
+              handleChange={handleChange}
+            />
           </Grid>
-        </Grid>
-        <Grid
-          item
-          xs={12}
-          className={classes.list}
-        >
-          <InvoiceList />
+
+          <Grid item xs={6}>
+            <InvoiceItemForm addItem={addItem} />
+          </Grid>
+          <Grid item xs={6} />
+
+          <Grid
+            item
+            xs={12}
+            className={classes.list}
+          >
+            <InvoiceList items={items} />
+          </Grid>
         </Grid>
       </Container>
     </Page>
   );
+};
+
+Account.propTypes = {
+  billno: PropTypes.string,
+  invoice: PropTypes.object,
+  addItem: PropTypes.func,
+  handleChange: PropTypes.func
 };
 
 export default Account;
