@@ -1,4 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
+/* eslint-disable radix */
+/* eslint-disable no-unused-expressions */
+import React, {
+  useContext, useEffect, useMemo, useState
+} from 'react';
 import PropTypes from 'prop-types';
 import {
   Button,
@@ -6,9 +10,10 @@ import {
 } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import PrintIcon from '@material-ui/icons/Print';
-import { getInvoices } from 'src/localforageUtils';
+import { getInvoices, getKey, setKey } from 'src/localforageUtils';
 import DataContext from 'src/localforageUtils/DataContext';
 import { Alert } from '@material-ui/lab';
+import moment from 'moment';
 import Account from '.';
 
 const useStyles = makeStyles((theme) => ({
@@ -26,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function InvoiceListModal({
-  open, handleClose, billno, setBillNo
+  open, handleClose, id, setId
 }) {
   const classes = useStyles();
 
@@ -34,24 +39,30 @@ export default function InvoiceListModal({
   const handleAlertOpen = () => setAlertOpen(true);
   const handleAlertClose = () => setAlertOpen(false);
 
-  const [totalbill, setTotalBill] = useState('0.00');
   const [isEdit, setIsEdit] = useState(false);
   const [invoice, setInvoice] = useState({});
+  const [err, setErr] = useState({});
+  const { createInvoice, openDialog } = useContext(DataContext) || {};
+  const [isChanged, setIsChanged] = useState(false);
 
   useEffect(() => {
     if (open) {
-      getInvoices().then((invoices) => {
-        const obj = invoices.find((item) => item.billno === billno);
+      Promise.all([getInvoices(), getKey()]).then(([invoices, billno]) => {
+        const obj = invoices.find((item) => item.id === id);
         if (obj) {
-          setTotalBill((obj.totalbill || 0).toFixed(2));
           setIsEdit(true);
           setInvoice(obj);
         } else {
+          setInvoice({ billdate: moment().format('YYYY-MM-DDTHH:mm'), billno: (billno + 1) % 100 });
           setIsEdit(false);
         }
       });
     } else if (!open && isEdit) {
-      setInvoice({});
+      setTimeout(() => setInvoice({}), 300);
+    }
+    if (!open) {
+      setErr({});
+      setIsChanged(false);
     }
   }, [open]);
 
@@ -60,25 +71,77 @@ export default function InvoiceListModal({
     const newItems = [item, ...items];
     const newInvoice = { ...invoice, items: newItems };
     setInvoice(newInvoice);
+    setIsChanged(true);
   };
 
-  const { createInvoice } = useContext(DataContext) || {};
+  const deleteItems = (ids = []) => {
+    const { items = [] } = invoice;
+    const newItems = items.filter((item, index) => !ids.includes(index));
+    const newInvoice = { ...invoice, items: newItems };
+    setInvoice(newInvoice);
+    setIsChanged(true);
+  };
+
   const saveInvoice = () => {
-    createInvoice(invoice, isEdit);
-    setBillNo(invoice.billno);
-    if (!isEdit) {
-      setIsEdit(true);
+    const {
+      billno: no,
+      billdate,
+      fullName
+    } = invoice;
+    let error = {};
+    !fullName && (error = { ...error, nameReq: 'Full Name is required' });
+    !no && (error = { ...error, noReq: 'Bill Number is required' });
+    !billdate && (error = { ...error, dateReq: 'Bill Date is required' });
+    if (Object.keys(error).length) {
+      setErr(error);
+    } else {
+      createInvoice(invoice, isEdit);
+      setId(invoice.id);
+      if (!isEdit) {
+        setIsEdit(true);
+        getKey().then((key) => {
+          if (invoice.billno === ((key + 1) % 100)) {
+            setKey(invoice.billno);
+          }
+        });
+      }
+      handleClose();
+      handleAlertOpen();
     }
-    handleClose();
-    handleAlertOpen();
+  };
+
+  const onClose = () => {
+    if (isChanged) {
+      openDialog({
+        description: 'There are some unsaved changes. Do you want to save the data?',
+        onSuccess: saveInvoice,
+        onCancel: handleClose
+      });
+    } else {
+      handleClose();
+    }
   };
 
   const handleChange = (event) => {
+    const { value, name } = event.target;
+
+    if (name === 'billno' && (parseInt(value) < 0 || parseInt(value) > 100)) {
+      return;
+    }
     setInvoice({
-      ...invoice,
-      [event.target.name]: event.target.value
+      ...invoice, [name]: value
     });
+    setIsChanged(true);
   };
+
+  const totalbill = useMemo(() => {
+    let total = 0;
+    // eslint-disable-next-line no-unused-expressions
+    invoice && invoice.items && invoice.items.forEach((obj) => {
+      total += obj.quantity * obj.price;
+    });
+    return total.toFixed(2);
+  }, [invoice]);
 
   return (
     <>
@@ -94,31 +157,16 @@ export default function InvoiceListModal({
       </Snackbar>
       <Dialog
         fullWidth
-        maxWidth="lg"
+        maxWidth="xl"
         open={open}
-        onClose={handleClose}
+        onClose={onClose}
         aria-labelledby="max-width-dialog-title"
       >
         <DialogTitle id="max-width-dialog-title">
           <div className={classes.dialogheader}>
             <div className="MuiTypography-h4">Invoice Billing</div>
             <div>
-              <Button
-                color="primary"
-                className={classes.button}
-                startIcon={<PrintIcon />}
-              >
-                Print
-              </Button>
-              <Button
-                color="primary"
-                className={classes.button}
-                startIcon={<SaveIcon />}
-                onClick={saveInvoice}
-              >
-                {isEdit ? 'Update Invoice' : 'Create Invoice'}
-              </Button>
-              <Button onClick={handleClose} color="primary">
+              <Button onClick={onClose} color="primary">
                 Close
               </Button>
             </div>
@@ -130,15 +178,32 @@ export default function InvoiceListModal({
             invoice={invoice}
             addItem={addItem}
             handleChange={handleChange}
+            profileErr={err}
+            deleteItems={deleteItems}
           />
         </DialogContent>
         <DialogActions>
           <Button
             variant="outlined"
             color="secondary"
-            className={classes.bill}
+            // className={classes.bill}
           >
             {`Total Bill: Rs.${totalbill}`}
+          </Button>
+          <Button
+            color="primary"
+            className={classes.button}
+            startIcon={<PrintIcon />}
+          >
+            Print
+          </Button>
+          <Button
+            color="primary"
+            className={`${classes.button} ${classes.bill}`}
+            startIcon={<SaveIcon />}
+            onClick={saveInvoice}
+          >
+            {isEdit ? 'Update Invoice' : 'Create Invoice'}
           </Button>
         </DialogActions>
       </Dialog>
@@ -149,6 +214,6 @@ export default function InvoiceListModal({
 InvoiceListModal.propTypes = {
   open: PropTypes.bool,
   handleClose: PropTypes.func,
-  billno: PropTypes.string,
-  setBillNo: PropTypes.func
+  id: PropTypes.string,
+  setId: PropTypes.func,
 };

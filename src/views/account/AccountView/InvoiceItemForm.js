@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
-  Box,
   Button,
   Grid,
   TextField,
@@ -16,7 +15,8 @@ import {
 const useStyles = makeStyles((theme) => ({
   root: {},
   add: {
-    marginRight: theme.spacing(2)
+    marginRight: theme.spacing(2),
+    maxHeight: 56
   }
 }));
 
@@ -29,6 +29,7 @@ const InvoiceItemForm = ({
 }) => {
   const classes = useStyles();
   const [values, setValues] = useState({});
+  const [err, setErr] = useState({ nameReqErr: '' });
 
   const handleChange = (event) => {
     setValues({
@@ -38,11 +39,18 @@ const InvoiceItemForm = ({
   };
 
   const addInvoiceItem = () => {
-    addItem(values);
-    setValues({});
+    const { itemName, price = '0', quantity = '0' } = values;
+    if (itemName) {
+      addItem({ itemName, price, quantity });
+      setValues({});
+      setErr({ nameReqErr: '' });
+    } else {
+      setErr({ nameReqErr: 'Item Name is required' });
+    }
   };
 
   const { itemName = '', price = '', quantity = '' } = values;
+  const { nameReqErr } = err;
 
   return (
     <Card>
@@ -64,7 +72,7 @@ const InvoiceItemForm = ({
           >
             <Grid
               item
-              xs={12}
+              xs={5}
             >
               <TextField
                 fullWidth
@@ -74,11 +82,16 @@ const InvoiceItemForm = ({
                 required
                 value={itemName}
                 variant="outlined"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                error={Boolean(nameReqErr)}
+                helperText={nameReqErr}
               />
             </Grid>
             <Grid
               item
-              xs={6}
+              xs={2}
             >
               <TextField
                 fullWidth
@@ -88,11 +101,14 @@ const InvoiceItemForm = ({
                 onChange={handleChange}
                 value={quantity}
                 variant="outlined"
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
             </Grid>
             <Grid
               item
-              xs={6}
+              xs={3}
             >
               <TextField
                 fullWidth
@@ -101,27 +117,31 @@ const InvoiceItemForm = ({
                 onChange={handleChange}
                 type="number"
                 value={price}
+                InputLabelProps={{
+                  shrink: true,
+                }}
                 variant="outlined"
               />
             </Grid>
+            <Grid
+              item
+              xs={2}
+              style={{ display: 'flex', }}
+            >
+              <Button
+                color="primary"
+                className={classes.add}
+                onClick={addInvoiceItem}
+                variant="outlined"
+              >
+                Add
+              </Button>
+            </Grid>
+
           </Grid>
 
         </form>
       </CardContent>
-      <Divider />
-      <Box
-        display="flex"
-        justifyContent="flex-end"
-        p={1}
-      >
-        <Button
-          color="primary"
-          className={classes.add}
-          onClick={addInvoiceItem}
-        >
-          Add To List
-        </Button>
-      </Box>
     </Card>
   );
 };

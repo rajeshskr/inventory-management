@@ -29,7 +29,7 @@ const Dashboard = () => {
   return (
     <Page
       className={classes.root}
-      title="Dashboard"
+      title="Furniture Point | Inventory Management System"
     >
       <Container maxWidth={false}>
         <Grid

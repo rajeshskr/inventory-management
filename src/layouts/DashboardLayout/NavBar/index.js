@@ -17,7 +17,7 @@ import NavItem from './NavItem';
 
 const user = {
   avatar: '/static/images/avatars/avatar_6.png',
-  jobTitle: 'Inventory Management System',
+  jobTitle: 'Billing Software',
   name: 'Furniture Point'
 };
 

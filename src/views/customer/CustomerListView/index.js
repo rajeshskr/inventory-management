@@ -8,14 +8,13 @@ import Page from 'src/components/Page';
 import DataContext from 'src/localforageUtils/DataContext';
 import InvoiceListModal from 'src/views/account/AccountView/InvoiceListModal';
 import Results from './Results';
-import Toolbar from './Toolbar';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
     minHeight: '100%',
     paddingBottom: theme.spacing(3),
-    paddingTop: theme.spacing(3)
+    // paddingTop: theme.spacing(3)
   }
 }));
 
@@ -24,18 +23,18 @@ const CustomerListView = () => {
   const { invoices } = useContext(DataContext) || {};
 
   const [open, setOpen] = useState(false);
-  const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
-  const [billno, setBillNo] = useState('');
+  const handleClose = () => setOpen(false);
+  const [id, setId] = useState('');
 
   const addInvoice = () => {
     handleOpen();
-    setBillNo('');
+    setId('');
   };
 
-  const editInvoice = (no) => {
+  const editInvoice = (uId) => {
     handleOpen();
-    setBillNo(no);
+    setId(uId);
   };
 
   return (
@@ -44,16 +43,16 @@ const CustomerListView = () => {
       title="Furniture Point | Inventory Management System"
     >
       <Container maxWidth={false}>
-        <Toolbar addInvoice={addInvoice} />
+        {/* <Toolbar /> */}
         <Box mt={3}>
-          <Results customers={invoices} editInvoice={editInvoice} />
+          <Results customers={invoices} editInvoice={editInvoice} addInvoice={addInvoice} />
         </Box>
       </Container>
       <InvoiceListModal
         open={open}
         handleClose={handleClose}
-        billno={billno}
-        setBillNo={setBillNo}
+        id={id}
+        setId={setId}
       />
     </Page>
   );
