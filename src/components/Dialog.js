@@ -1,5 +1,5 @@
+/* eslint-disable no-unused-expressions */
 import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -14,20 +14,21 @@ export default function AlertDialog() {
     closeDialog,
     dialogCb,
     isDialogOpen,
-    dialogCancelCb
+    dialogCancelCb,
+    cancelText,
+    confirmText
   } = dialogProps;
   const onConfirm = () => {
-    dialogCb();
+    dialogCb && dialogCb();
     closeDialog();
   };
   const onCancel = () => {
-    dialogCancelCb();
+    dialogCancelCb && dialogCancelCb();
     closeDialog();
   };
   return (
     <Dialog
       open={isDialogOpen}
-      onClose={onCancel}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
@@ -38,10 +39,10 @@ export default function AlertDialog() {
       </DialogContent>
       <DialogActions>
         <Button onClick={onCancel} color="primary">
-          Cancel
+          {cancelText || 'Cancel'}
         </Button>
         <Button onClick={onConfirm} color="primary" autoFocus>
-          Confirm
+          {confirmText || 'Confirm'}
         </Button>
       </DialogActions>
     </Dialog>

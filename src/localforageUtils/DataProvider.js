@@ -6,10 +6,14 @@ import DataContext from './DataContext';
 
 const DataProvider = ({ children }) => {
   const [invoices, setInvoice] = useState([]);
-  const [isDialogOpen, setDialogOpen] = useState(false);
-  const [desc, setDesc] = useState('');
-  const [dialogCb, setDialogCb] = useState(() => () => ({}));
-  const [dialogCancelCb, setDialogCancelCb] = useState(() => () => ({}));
+  const [dialogProps, setDialogProps] = useState({
+    isDialogOpen: false,
+    description: '',
+    dialogCb: () => {},
+    dialogCancelCb: () => {},
+    confirmText: '',
+    cancelText: ''
+  });
 
   useEffect(() => {
     getInvoices().then((data) => setInvoice(data));
@@ -33,17 +37,26 @@ const DataProvider = ({ children }) => {
     return setInvoices(newList);
   });
 
-  const openDialog = ({ description, onSuccess, onCancel }) => {
-    setDesc(description);
-    setDialogOpen(true);
-    setDialogCb(() => onSuccess);
-    setDialogCancelCb(() => onCancel);
+  const openDialog = ({
+    description, onSuccess, onCancel, confirmText, cancelText
+  }) => {
+    setDialogProps({
+      description, dialogCb: onSuccess, dialogCancelCb: onCancel, isDialogOpen: true, confirmText, cancelText
+    });
   };
 
   const closeDialog = () => {
-    setDesc('');
-    setDialogOpen(false);
-    setDialogCb(() => () => ({}));
+    setDialogProps({ ...dialogProps, isDialogOpen: false });
+    setTimeout(() => {
+      setDialogProps({
+        isDialogOpen: false,
+        description: '',
+        dialogCb: () => {},
+        dialogCancelCb: () => {},
+        confirmText: '',
+        cancelText: ''
+      });
+    }, 500);
   };
 
   return (
@@ -53,11 +66,8 @@ const DataProvider = ({ children }) => {
         createInvoice,
         deleteInvoices,
         dialogProps: {
-          description: desc,
-          closeDialog,
-          dialogCb,
-          isDialogOpen,
-          dialogCancelCb
+          ...dialogProps,
+          closeDialog
         },
         openDialog
       }}

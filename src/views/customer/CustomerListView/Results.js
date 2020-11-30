@@ -88,7 +88,9 @@ const Results = ({
       onSuccess: () => {
         deleteInvoices(selectedCustomerIds);
         setSelectedCustomerIds([]);
-      }
+      },
+      cancelText: 'No',
+      confirmText: 'Yes'
     });
   };
 
@@ -98,7 +100,9 @@ const Results = ({
       onSuccess: () => {
         deleteInvoices(customers.map((obj) => obj.id));
         setSelectedCustomerIds([]);
-      }
+      },
+      cancelText: 'No',
+      confirmText: 'Yes'
     });
   };
 

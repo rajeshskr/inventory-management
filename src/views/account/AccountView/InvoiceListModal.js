@@ -115,7 +115,9 @@ export default function InvoiceListModal({
       openDialog({
         description: 'There are some unsaved changes. Do you want to save the data?',
         onSuccess: saveInvoice,
-        onCancel: handleClose
+        onCancel: handleClose,
+        cancelText: 'Close',
+        confirmText: 'Save & Close'
       });
     } else {
       handleClose();

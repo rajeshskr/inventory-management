@@ -59,7 +59,9 @@ const InvoiceList = ({
       onSuccess: () => {
         deleteItems(selectedCustomerIds);
         setSelectedCustomerIds([]);
-      }
+      },
+      cancelText: 'No',
+      confirmText: 'Yes'
     });
   };
 
