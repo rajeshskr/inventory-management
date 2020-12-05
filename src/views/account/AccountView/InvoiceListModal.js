@@ -10,10 +10,13 @@ import {
 } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import PrintIcon from '@material-ui/icons/Print';
-import { getInvoices, getKey, setKey } from 'src/localforageUtils';
+import {
+  getInvoices, getKey, setKey, setPrintInvoice
+} from 'src/localforageUtils';
 import DataContext from 'src/localforageUtils/DataContext';
 import { Alert } from '@material-ui/lab';
 import moment from 'moment';
+import { v4 as uuid } from 'uuid';
 import Account from '.';
 
 const useStyles = makeStyles((theme) => ({
@@ -53,7 +56,11 @@ export default function InvoiceListModal({
           setIsEdit(true);
           setInvoice(obj);
         } else {
-          setInvoice({ billdate: moment().format('YYYY-MM-DDTHH:mm'), billno: (billno + 1) % 100 });
+          setInvoice({
+            billdate: moment().format('YYYY-MM-DDTHH:mm'),
+            billno: (billno + 1) % 100,
+            id: uuid()
+          });
           setIsEdit(false);
         }
       });
@@ -145,6 +152,12 @@ export default function InvoiceListModal({
     return total.toFixed(2);
   }, [invoice]);
 
+  const openPrint = () => {
+    setPrintInvoice(invoice).then(() => {
+      window.open('/print', '_blank');
+    });
+  };
+
   return (
     <>
       <Snackbar
@@ -196,6 +209,7 @@ export default function InvoiceListModal({
             color="primary"
             className={classes.button}
             startIcon={<PrintIcon />}
+            onClick={openPrint}
           >
             Print
           </Button>

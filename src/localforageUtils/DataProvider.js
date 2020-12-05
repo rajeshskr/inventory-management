@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { v4 as uuid } from 'uuid';
 import { getInvoices, setInvoices } from './index';
 import DataContext from './DataContext';
 
@@ -25,7 +24,7 @@ const DataProvider = ({ children }) => {
     if (isEdit && editIndex !== -1) {
       newList[editIndex] = newInvoice;
     } else if (!isEdit) {
-      newList.unshift({ id: uuid(), ...newInvoice });
+      newList.unshift(newInvoice);
     }
     setInvoice(newList);
     return setInvoices(newList);
