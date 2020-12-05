@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getPrintInvoice } from 'src/localforageUtils';
 import moment from 'moment';
+import logo from './logo.json';
 
 // eslint-disable-next-line react/prefer-stateless-function
 function Print() {
@@ -31,7 +32,7 @@ function Print() {
       <header>
         <div className="row align-items-center">
           <div className="col-sm-7 text-center text-sm-left mb-3 mb-sm-0">
-            <img id="logo" src="/static/images/logo.png" title="Koice" alt="Koice" height="100px" width="285px" />
+            <img id="logo" src={`data:image/png;base64,${logo.dataUrl}`} title="Koice" alt="Koice" height="100px" width="285px" />
           </div>
           <div className="col-sm-5 text-center text-sm-right">
             <h4 className="text-7 mb-0">Invoice</h4>
