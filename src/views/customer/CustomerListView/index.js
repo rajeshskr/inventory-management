@@ -70,7 +70,7 @@ const CustomerListView = () => {
       <Grid
         container
         spacing={3}
-        maxWidth={false}
+        // maxWidth={false}
         style={{
           padding: '20px'
         }}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getPrintInvoice } from 'src/localforageUtils';
 import moment from 'moment';
+import { currency, float } from 'src/utils';
 import logo from './logo.json';
 
 // eslint-disable-next-line react/prefer-stateless-function
@@ -25,7 +26,7 @@ function Print() {
   }, []);
   let total = 0;
   items.forEach((item) => {
-    total += (parseInt(item.price) || 0) * (parseInt(item.quantity) || 0);
+    total += (float(item.price) * float(item.quantity));
   });
   return (
     <div className="invoice-container">
@@ -133,7 +134,7 @@ function Print() {
                             overflowWrap: 'break-word'
                           }}
                         >
-                          {`Rs.${price}`}
+                          {currency(price)}
 
                         </td>
                         <td
@@ -155,7 +156,7 @@ function Print() {
 
                           }}
                         >
-                          {`Rs.${(parseInt(price) || 0) * (parseInt(quantity) || 0)}`}
+                          {currency(float(price || 0) * float(quantity))}
                         </td>
                       </tr>
                     );
@@ -164,7 +165,7 @@ function Print() {
                   )}
                   <tr>
                     <td colSpan="3" className="bg-light-2 text-right"><strong>Total:</strong></td>
-                    <td className="bg-light-2 text-right">{`Rs.${total}`}</td>
+                    <td className="bg-light-2 text-right">{currency(total)}</td>
                   </tr>
                 </tbody>
               </table>

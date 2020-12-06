@@ -17,6 +17,7 @@ import DataContext from 'src/localforageUtils/DataContext';
 import { Alert } from '@material-ui/lab';
 import moment from 'moment';
 import { v4 as uuid } from 'uuid';
+import { currency } from 'src/utils';
 import Account from '.';
 
 const useStyles = makeStyles((theme) => ({
@@ -203,7 +204,7 @@ export default function InvoiceListModal({
             color="secondary"
             // className={classes.bill}
           >
-            {`Total Bill: Rs.${totalbill}`}
+            {`Total Bill: ${currency(totalbill)}`}
           </Button>
           <Button
             color="primary"

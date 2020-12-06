@@ -1,7 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import {
   Card,
   Table,
@@ -15,6 +14,7 @@ import {
   TableContainer,
   CardHeader,
 } from '@material-ui/core';
+import { currency } from 'src/utils';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -83,13 +83,13 @@ const Sales = ({ billCounts, totalSales, dates }) => {
                     className={classes.row}
                   >
                     <TableCell style={{ overflowWrap: 'break-word', maxWidth: 75 }}>
-                      {moment(date).format('DD MMM YYYY')}
+                      {date}
                     </TableCell>
                     <TableCell style={{ overflowWrap: 'break-word', maxWidth: 175 }}>
                       {`${billCounts[index] || 0}`}
                     </TableCell>
                     <TableCell style={{ overflowWrap: 'break-word', maxWidth: 125 }}>
-                      {`Rs.${totalSales[index] || 0}`}
+                      {currency(totalSales[index])}
                     </TableCell>
                   </TableRow>
                 );

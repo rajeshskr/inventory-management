@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
@@ -16,6 +16,7 @@ import {
   CardContent,
   TableContainer,
 } from '@material-ui/core';
+import { currency, float } from 'src/utils';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -113,14 +114,14 @@ const InvoiceTable = ({
                             <TableCell align="left" style={{ overflowWrap: 'break-word', maxWidth: 250 }}>
                               {itemName}
                             </TableCell>
-                            <TableCell align="left" style={{ maxWidth: 75, overflowWrap: 'break-word', }}>
-                              {price}
+                            <TableCell align="left" style={{ maxWidth: 100, overflowWrap: 'break-word', }}>
+                              {currency(price)}
                             </TableCell>
                             <TableCell align="left" style={{ maxWidth: 50, overflowWrap: 'break-word', }}>
                               {quantity}
                             </TableCell>
                             <TableCell align="left" style={{ maxWidth: 120, overflowWrap: 'break-word', }}>
-                              { `Rs. ${parseInt(quantity) * parseInt(price)}`}
+                              {currency(float(quantity) * float(price))}
                             </TableCell>
                           </TableRow>
                         );

@@ -19,6 +19,7 @@ import {
   TextField,
 } from '@material-ui/core';
 import DataContext from 'src/localforageUtils/DataContext';
+import { currency } from 'src/utils';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -261,9 +262,9 @@ const Results = ({
                       {customer.address || 'NA'}
                     </TableCell>
                     <TableCell style={{ overflowWrap: 'break-word', maxWidth: 75 }}>
-                      {`Rs. ${(billtotal || 0).toFixed(2)}`}
+                      {currency(billtotal)}
                     </TableCell>
-                    <TableCell style={{ overflowWrap: 'break-word', maxWidth: 120 }}>
+                    <TableCell style={{ overflowWrap: 'break-word', maxWidth: 125 }}>
                       {moment(customer.billdate).format('DD MMM YYYY HH:mm A')}
                     </TableCell>
                   </TableRow>
