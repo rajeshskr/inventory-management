@@ -179,9 +179,10 @@ function Print() {
           margin: 0
         }}
       >
-        <div style={{
-          display: 'flex'
-        }}
+        <div
+          style={{
+            display: 'flex'
+          }}
         >
           <div style={{
             maxWidth: '400px'
@@ -219,7 +220,6 @@ function Print() {
             </div>
           </div>
         </div>
-
       </footer>
     </div>
   );

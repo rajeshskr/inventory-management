@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import React, { useContext, useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -20,6 +21,7 @@ import {
 } from '@material-ui/core';
 import DataContext from 'src/localforageUtils/DataContext';
 import { addr, currency } from 'src/utils';
+import { setPrintInvoice } from 'src/localforageUtils';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -41,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
   },
   row: {
     cursor: 'pointer'
-  }
+  },
 }));
 
 const Results = ({
@@ -221,6 +223,7 @@ const Results = ({
                 <TableCell>
                   Billed Date
                 </TableCell>
+                <TableCell />
               </TableRow>
             </TableHead>
             <TableBody>
@@ -259,13 +262,27 @@ const Results = ({
                       {customer.phone2 || 'NA'}
                     </TableCell>
                     <TableCell style={{ overflowWrap: 'break-word', maxWidth: 200 }}>
-                      {addr(customer.address) || 'NA'}
+                      {customer.address ? addr(customer.address) : 'NA'}
                     </TableCell>
-                    <TableCell style={{ overflowWrap: 'break-word', maxWidth: 75 }}>
+                    <TableCell style={{ overflowWrap: 'break-word', maxWidth: 100 }}>
                       {currency(billtotal)}
                     </TableCell>
-                    <TableCell style={{ overflowWrap: 'break-word', maxWidth: 125 }}>
+                    <TableCell style={{ overflowWrap: 'break-word', maxWidth: 140 }}>
                       {moment(customer.billdate).format('DD MMM YYYY HH:mm A')}
+                    </TableCell>
+                    <TableCell style={{ width: 75 }}>
+                      <Button
+                        color="primary"
+                        onClick={(e) => {
+                          e.stopPropagation && e.stopPropagation();
+                          e.stopImmediatePropagation && e.stopImmediatePropagation();
+                          setPrintInvoice(customer).then(() => {
+                            window.open('/print', '_blank');
+                          });
+                        }}
+                      >
+                        Print
+                      </Button>
                     </TableCell>
                   </TableRow>
                 );

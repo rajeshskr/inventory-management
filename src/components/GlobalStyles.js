@@ -24,6 +24,12 @@ const useStyles = makeStyles(() => createStyles({
     '#root': {
       height: '100%',
       width: '100%'
+    },
+    '@global': {
+      // You should target [class*="MuiButton-root"] instead if you nest themes.
+      '.MuiTableCell-root': {
+        padding: '11px',
+      },
     }
   }
 }));

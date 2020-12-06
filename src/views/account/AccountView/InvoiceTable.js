@@ -117,7 +117,7 @@ const InvoiceTable = ({
                             <TableCell align="left" style={{ maxWidth: 100, overflowWrap: 'break-word', }}>
                               {currency(price)}
                             </TableCell>
-                            <TableCell align="left" style={{ maxWidth: 50, overflowWrap: 'break-word', }}>
+                            <TableCell align="left" style={{ maxWidth: 75, overflowWrap: 'break-word', }}>
                               {quantity}
                             </TableCell>
                             <TableCell align="left" style={{ maxWidth: 120, overflowWrap: 'break-word', }}>
