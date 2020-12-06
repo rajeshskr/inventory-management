@@ -51,7 +51,7 @@ export const initialize = () => {
   return Promise.all([
     getKey().then((id) => {
       if (!id) {
-        return setKey(0);
+        return setKey(100);
       }
       return Promise.resolve();
     }),

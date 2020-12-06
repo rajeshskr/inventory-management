@@ -59,7 +59,7 @@ export default function InvoiceListModal({
         } else {
           setInvoice({
             billdate: moment().format('YYYY-MM-DDTHH:mm'),
-            billno: (billno + 1) % 100,
+            billno: (billno % 100) + 1,
             id: uuid()
           });
           setIsEdit(false);
@@ -108,7 +108,7 @@ export default function InvoiceListModal({
       if (!isEdit) {
         setIsEdit(true);
         getKey().then((key) => {
-          if (invoice.billno === ((key + 1) % 100)) {
+          if (invoice.billno === ((key % 100) + 1)) {
             setKey(invoice.billno);
           }
         });
