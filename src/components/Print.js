@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getPrintInvoice } from 'src/localforageUtils';
 import moment from 'moment';
-import { currency, float } from 'src/utils';
+import { addr, currency, float } from 'src/utils';
 import logo from './logo.json';
 
 // eslint-disable-next-line react/prefer-stateless-function
@@ -86,7 +86,7 @@ function Print() {
               <br />
               {address ? (
                 <>
-                  {address}
+                  {addr(address)}
                   <br />
                 </>
               ) : null}

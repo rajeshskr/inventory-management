@@ -19,7 +19,7 @@ import {
   TextField,
 } from '@material-ui/core';
 import DataContext from 'src/localforageUtils/DataContext';
-import { currency } from 'src/utils';
+import { addr, currency } from 'src/utils';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -150,7 +150,7 @@ const Results = ({
               className={classes.deleteButton}
               color="secondary"
               onClick={showAllDates}
-              disabled={!filtered.length}
+              disabled={!filterDate}
             >
               Show All Dates
             </Button>
@@ -259,7 +259,7 @@ const Results = ({
                       {customer.phone2 || 'NA'}
                     </TableCell>
                     <TableCell style={{ overflowWrap: 'break-word', maxWidth: 200 }}>
-                      {customer.address || 'NA'}
+                      {addr(customer.address) || 'NA'}
                     </TableCell>
                     <TableCell style={{ overflowWrap: 'break-word', maxWidth: 75 }}>
                       {currency(billtotal)}
