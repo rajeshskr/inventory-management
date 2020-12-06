@@ -88,7 +88,6 @@ function Print() {
               {address ? (
                 <>
                   {addr(address)}
-                  <br />
                 </>
               ) : null}
               {(phone1 || phone2) ? `Phone: ${phone1}, ${phone2}` : ''}
