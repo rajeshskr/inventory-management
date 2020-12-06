@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getPrintInvoice } from 'src/localforageUtils';
+import { getPrintInvoice, removePrintInvoice } from 'src/localforageUtils';
 import moment from 'moment';
 import { addr, currency, float } from 'src/utils';
 import logo from './logo.json';
@@ -23,6 +23,7 @@ function Print() {
         window.print();
       }, 300);
     });
+    window.addEventListener('beforeunload', removePrintInvoice);
   }, []);
   let total = 0;
   items.forEach((item) => {

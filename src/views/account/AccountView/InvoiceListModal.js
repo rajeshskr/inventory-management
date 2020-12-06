@@ -155,7 +155,7 @@ export default function InvoiceListModal({
 
   const openPrint = () => {
     setPrintInvoice(invoice).then(() => {
-      window.open('/print', '_blank');
+      window.open(`/print?printId=${invoice.id}`, '_blank');
     });
   };
 

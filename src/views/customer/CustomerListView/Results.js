@@ -277,7 +277,7 @@ const Results = ({
                           e.stopPropagation && e.stopPropagation();
                           e.stopImmediatePropagation && e.stopImmediatePropagation();
                           setPrintInvoice(customer).then(() => {
-                            window.open('/print', '_blank');
+                            window.open(`/print?printId=${customer.id}`, '_blank');
                           });
                         }}
                       >
