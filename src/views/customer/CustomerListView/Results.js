@@ -16,6 +16,7 @@ import {
   TableContainer,
   CardHeader,
   Button,
+  TextField,
 } from '@material-ui/core';
 import DataContext from 'src/localforageUtils/DataContext';
 
@@ -47,12 +48,19 @@ const Results = ({
 }) => {
   const classes = useStyles();
   const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
+  const [filterDate, setFilterDate] = useState('');
+  const showAllDates = () => {
+    setFilterDate('');
+  };
 
+  const filtered = filterDate ? customers.filter((obj) => {
+    return filterDate === moment(obj.billdate).format('YYYY-MM-DD');
+  }) : customers;
   const handleSelectAll = (event) => {
     let newSelectedCustomerIds;
 
     if (event.target.checked) {
-      newSelectedCustomerIds = customers.map((customer) => customer.id);
+      newSelectedCustomerIds = filtered.map((customer) => customer.id);
     } else {
       newSelectedCustomerIds = [];
     }
@@ -100,6 +108,7 @@ const Results = ({
       onSuccess: () => {
         deleteInvoices(customers.map((obj) => obj.id));
         setSelectedCustomerIds([]);
+        setFilterDate('');
       },
       cancelText: 'No',
       confirmText: 'Yes'
@@ -136,12 +145,35 @@ const Results = ({
             >
               Delete All
             </Button>
+            <Button
+              className={classes.deleteButton}
+              color="secondary"
+              onClick={showAllDates}
+              disabled={!filtered.length}
+            >
+              Show All Dates
+            </Button>
+            <TextField
+              id="date"
+              type="date"
+              style={{
+                margin: '3px 15px 0 15px'
+              }}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              value={filterDate}
+              onChange={(e) => {
+                setFilterDate(e.target.value);
+                setSelectedCustomerIds([]);
+              }}
+            />
           </>
       )}
         title="Billing List"
       />
       {
-      !customers.length ? (
+      !filtered.length ? (
         <CardContent>
           <Typography
             color="textPrimary"
@@ -158,11 +190,11 @@ const Results = ({
               <TableRow>
                 <TableCell padding="checkbox">
                   <Checkbox
-                    checked={selectedCustomerIds.length === customers.length}
+                    checked={selectedCustomerIds.length === filtered.length}
                     color="primary"
                     indeterminate={
                       selectedCustomerIds.length > 0
-                      && selectedCustomerIds.length < customers.length
+                      && selectedCustomerIds.length < filtered.length
                     }
                     onChange={handleSelectAll}
                   />
@@ -191,7 +223,7 @@ const Results = ({
               </TableRow>
             </TableHead>
             <TableBody>
-              {customers.map((customer) => {
+              {filtered.map((customer) => {
                 let billtotal = 0;
                 // eslint-disable-next-line no-unused-expressions
                 customer && customer.items && customer.items.forEach((obj) => {

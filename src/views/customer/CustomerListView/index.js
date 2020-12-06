@@ -1,13 +1,14 @@
 import React, { useContext, useState } from 'react';
 import {
-  Box,
-  Container,
+  Grid,
   makeStyles
 } from '@material-ui/core';
 import Page from 'src/components/Page';
 import DataContext from 'src/localforageUtils/DataContext';
 import InvoiceListModal from 'src/views/account/AccountView/InvoiceListModal';
+import moment from 'moment';
 import Results from './Results';
+import Sales from './Sales';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,17 +38,51 @@ const CustomerListView = () => {
     setId(uId);
   };
 
+  let billCounts = new Map();
+  let totalSales = new Map();
+  let dates = new Map();
+  invoices.forEach((invoice) => {
+    const date = moment(invoice.billdate).format('DD MMM YYYY');
+    dates.set(date, date);
+    billCounts.set(
+      date,
+      (billCounts.get(date) || 0) + 1
+    );
+    let total = 0;
+    // eslint-disable-next-line no-unused-expressions
+    invoice.items && invoice.items.forEach((obj) => {
+      total += obj.quantity * obj.price;
+    });
+    totalSales.set(
+      date,
+      (totalSales.get(date) || 0) + total
+    );
+  });
+  billCounts = [...billCounts.values()];
+  totalSales = [...totalSales.values()];
+  dates = [...dates.values()];
+
   return (
     <Page
       className={classes.root}
       title="Furniture Point | Inventory Management System"
     >
-      <Container maxWidth={false}>
+      <Grid
+        container
+        spacing={3}
+        maxWidth={false}
+        style={{
+          padding: '20px'
+        }}
+      >
         {/* <Toolbar /> */}
-        <Box mt={3}>
+        <Grid item xs={12} mt={3}>
           <Results customers={invoices} editInvoice={editInvoice} addInvoice={addInvoice} />
-        </Box>
-      </Container>
+        </Grid>
+        <Grid item xs={6} mt={3}>
+          <Sales billCounts={billCounts} totalSales={totalSales} dates={dates} />
+        </Grid>
+      </Grid>
       <InvoiceListModal
         open={open}
         handleClose={handleClose}

@@ -32,7 +32,7 @@ function Print() {
       <header>
         <div className="row align-items-center">
           <div className="col-sm-7 text-center text-sm-left mb-3 mb-sm-0">
-            <img id="logo" src={`data:image/png;base64,${logo.dataUrl}`} title="Koice" alt="Koice" height="100px" width="285px" />
+            <img id="logo" src={`data:image/png;base64,${logo.dataUrl}`} title="Furnitures Point" alt="Furnitures Point" height="75px" width="214px" />
           </div>
           <div className="col-sm-5 text-center text-sm-right">
             <h4 className="text-7 mb-0">Invoice</h4>
@@ -96,7 +96,7 @@ function Print() {
         <div
           className="card"
           style={{
-            margin: '45px 0'
+            margin: '15px 0 20px 0'
           }}
         >
           <div className="card-body px-2">
@@ -115,24 +115,47 @@ function Print() {
                     const { itemName, price, quantity } = item;
                     return (
                       <tr>
-                        <td className="col-3 border-0">{itemName}</td>
+                        <td
+                          className="col-3 border-0"
+                          style={{
+                            maxWidth: '350px',
+                            overflowWrap: 'break-word'
+                          }}
+                        >
+                          {itemName}
+
+                        </td>
                         <td
                           className="col-2 text-center border-0"
                           style={{
-                            minWidth: '10rem'
+                            minWidth: '10rem',
+                            maxWidth: '160px',
+                            overflowWrap: 'break-word'
                           }}
                         >
-                          {`Rs. ${price}`}
+                          {`Rs.${price}`}
 
                         </td>
-                        <td className="col-1 text-center border-0">{quantity}</td>
+                        <td
+                          className="col-1 text-center border-0"
+                          style={{
+                            maxWidth: '120px',
+                            overflowWrap: 'break-word'
+                          }}
+                        >
+                          {quantity}
+
+                        </td>
                         <td
                           className="col-2 text-right border-0"
                           style={{
-                            minWidth: '10rem'
+                            minWidth: '10rem',
+                            maxWidth: '180px',
+                            overflowWrap: 'break-word'
+
                           }}
                         >
-                          {`Rs. ${(parseInt(price) || 0) * (parseInt(quantity) || 0)}`}
+                          {`Rs.${(parseInt(price) || 0) * (parseInt(quantity) || 0)}`}
                         </td>
                       </tr>
                     );
@@ -141,7 +164,7 @@ function Print() {
                   )}
                   <tr>
                     <td colSpan="3" className="bg-light-2 text-right"><strong>Total:</strong></td>
-                    <td className="bg-light-2 text-right">{`Rs. ${total}`}</td>
+                    <td className="bg-light-2 text-right">{`Rs.${total}`}</td>
                   </tr>
                 </tbody>
               </table>
