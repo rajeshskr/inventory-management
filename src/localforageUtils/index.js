@@ -25,24 +25,24 @@ export const getPrintInvoice = () => {
 };
 
 export const setPrintInvoice = (invoice) => {
-  localforage.getItem(keys.PRINT_INVOICE).then((invoices) => {
+  return localforage.getItem(keys.PRINT_INVOICE).then((invoices) => {
     (!invoices || !invoices.size) && (invoices = new Map());
     invoices.set(invoice.id, invoice);
-    localforage.setItem(keys.PRINT_INVOICE, invoices);
+    return localforage.setItem(keys.PRINT_INVOICE, invoices);
   });
-  return Promise.resolve();
 };
 
 export const removePrintInvoice = () => {
-  const query = getJsonFromUrl();
-  localforage.getItem(keys.PRINT_INVOICE).then((invoices) => {
-    (!invoices || !invoices.size) && (invoices = new Map());
-    invoices.delete(query.printId);
-    localforage.setItem(
-      keys.PRINT_INVOICE,
-      invoices
-    );
-  });
+  localforage.setItem(keys.PRINT_INVOICE, new Map());
+  // const query = getJsonFromUrl();
+  // localforage.getItem(keys.PRINT_INVOICE).then((invoices) => {
+  //   (!invoices || !invoices.size) && (invoices = new Map());
+  //   invoices.delete(query.printId);
+  //   localforage.setItem(
+  //     keys.PRINT_INVOICE,
+  //     invoices
+  //   );
+  // });
 };
 
 // eslint-disable-next-line import/prefer-default-export

@@ -16,7 +16,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const InvoiceList = ({
-  className, items, deleteItems, ...rest
+  className, items, deleteItems, isEdit, ...rest
 }) => {
   const classes = useStyles();
   const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
@@ -74,7 +74,7 @@ const InvoiceList = ({
     >
       <Card>
         <CardHeader
-          action={(
+          action={!isEdit ? (
             <Button
               color="secondary"
               onClick={deleteSelected}
@@ -82,8 +82,8 @@ const InvoiceList = ({
             >
               Delete Items
             </Button>
-        )}
-          title="Invoice Items List"
+          ) : undefined}
+          title="Invoice Particulars"
         />
         <Divider />
         <InvoiceTable
@@ -91,6 +91,7 @@ const InvoiceList = ({
           handleSelectAll={handleSelectAll}
           handleSelectOne={handleSelectOne}
           selectedCustomerIds={selectedCustomerIds}
+          isEdit={isEdit}
         />
       </Card>
     </form>
@@ -98,6 +99,7 @@ const InvoiceList = ({
 };
 
 InvoiceList.propTypes = {
+  isEdit: PropTypes.bool,
   className: PropTypes.string,
   items: PropTypes.array,
   deleteItems: PropTypes.func

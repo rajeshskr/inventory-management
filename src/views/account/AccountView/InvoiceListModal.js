@@ -58,7 +58,7 @@ export default function InvoiceListModal({
           setInvoice(obj);
         } else {
           setInvoice({
-            billdate: moment().format('YYYY-MM-DDTHH:mm'),
+            billdate: moment().format('YYYY-MM-DD'),
             billno: (billno % 100) + 1,
             id: uuid()
           });
@@ -90,7 +90,7 @@ export default function InvoiceListModal({
     setIsChanged(true);
   };
 
-  const saveInvoice = () => {
+  const saveInvoice = (needPrint) => {
     const {
       billno: no,
       billdate,
@@ -105,6 +105,9 @@ export default function InvoiceListModal({
     } else {
       createInvoice(invoice, isEdit);
       setId(invoice.id);
+      needPrint && (setPrintInvoice(invoice).then(() => {
+        window.open(`/print?printId=${invoice.id}&preview=false`, '_blank', 'noopener');
+      }));
       if (!isEdit) {
         setIsEdit(true);
         getKey().then((key) => {
@@ -122,7 +125,7 @@ export default function InvoiceListModal({
     if (isChanged) {
       openDialog({
         description: 'There are some unsaved changes. Do you want to save the data?',
-        onSuccess: saveInvoice,
+        onSuccess: () => saveInvoice(),
         onCancel: handleClose,
         cancelText: 'Close',
         confirmText: 'Save & Close'
@@ -155,7 +158,7 @@ export default function InvoiceListModal({
 
   const openPrint = () => {
     setPrintInvoice(invoice).then(() => {
-      window.open(`/print?printId=${invoice.id}`, '_blank');
+      window.open(`/print?printId=${invoice.id}`, '_blank', 'noopener');
     });
   };
 
@@ -196,6 +199,7 @@ export default function InvoiceListModal({
             handleChange={handleChange}
             profileErr={err}
             deleteItems={deleteItems}
+            isEdit={isEdit}
           />
         </DialogContent>
         <DialogActions>
@@ -210,17 +214,39 @@ export default function InvoiceListModal({
             color="primary"
             className={classes.button}
             startIcon={<PrintIcon />}
-            onClick={openPrint}
+            onClick={() => {
+              setPrintInvoice(invoice).then(() => {
+                window.open(`/print?printId=${invoice.id}&preview=false`, '_blank', 'noopener');
+              });
+            }}
           >
             Print
           </Button>
           <Button
             color="primary"
+            className={classes.button}
+            startIcon={<PrintIcon />}
+            onClick={openPrint}
+          >
+            Preview
+          </Button>
+          <Button
+            color="primary"
+            className={classes.button}
+            startIcon={<SaveIcon />}
+            onClick={() => saveInvoice(true)}
+            disabled={isEdit}
+          >
+            Save and Print
+          </Button>
+          <Button
+            color="primary"
             className={`${classes.button} ${classes.bill}`}
             startIcon={<SaveIcon />}
-            onClick={saveInvoice}
+            onClick={() => saveInvoice()}
+            disabled={isEdit}
           >
-            {isEdit ? 'Update Invoice' : 'Create Invoice'}
+            Save
           </Button>
         </DialogActions>
       </Dialog>

@@ -28,7 +28,8 @@ const Account = ({
   addItem,
   handleChange,
   profileErr,
-  deleteItems
+  deleteItems,
+  isEdit
 }) => {
   const classes = useStyles();
 
@@ -60,11 +61,12 @@ const Account = ({
                 values={invoice}
                 handleChange={handleChange}
                 profileErr={profileErr}
+                isEdit={isEdit}
               />
             </Grid>
 
             <Grid item xs={12} className={classes.space}>
-              <InvoiceItemForm addItem={addItem} />
+              <InvoiceItemForm addItem={addItem} isEdit={isEdit} />
             </Grid>
           </Grid>
           <Grid
@@ -77,7 +79,7 @@ const Account = ({
               xs={12}
               className={classes.space}
             >
-              <InvoiceList items={items} deleteItems={deleteItems} />
+              <InvoiceList items={items} deleteItems={deleteItems} isEdit={isEdit} />
             </Grid>
           </Grid>
 
@@ -89,6 +91,7 @@ const Account = ({
 
 Account.propTypes = {
   id: PropTypes.string,
+  isEdit: PropTypes.bool,
   invoice: PropTypes.object,
   addItem: PropTypes.func,
   handleChange: PropTypes.func,

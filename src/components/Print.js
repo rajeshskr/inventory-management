@@ -1,29 +1,33 @@
 import React, { useEffect, useState } from 'react';
-import { getPrintInvoice, removePrintInvoice } from 'src/localforageUtils';
+import { getPrintInvoice } from 'src/localforageUtils';
 import moment from 'moment';
-import { addr, currency, float } from 'src/utils';
+import {
+  addr, currency, float, getJsonFromUrl
+} from 'src/utils';
 import logo from './logo.json';
 
 // eslint-disable-next-line react/prefer-stateless-function
 function Print() {
   const [printInvoice, setPrintInvoice] = useState({});
   const {
-    fullName,
+    fullName = '',
     address = '',
-    phone1,
-    phone2,
-    billno,
-    billdate,
+    phoneno = '',
+    gstin = '',
+    billno = '',
+    billdate = '',
     items = []
   } = printInvoice || {};
   useEffect(() => {
     getPrintInvoice().then((data) => {
       setPrintInvoice(data);
-      setTimeout(() => {
-        window.print();
-      }, 300);
+      const query = getJsonFromUrl();
+      if (query.preview === 'false') {
+        setTimeout(() => {
+          window.print();
+        }, 100);
+      }
     });
-    window.addEventListener('beforeunload', removePrintInvoice);
   }, []);
   let total = 0;
   items.forEach((item) => {
@@ -31,13 +35,14 @@ function Print() {
   });
   return (
     <div className="invoice-container">
+      <div className="pageborder" />
       <header>
         <div className="row align-items-center">
           <div className="col-sm-7 text-center text-sm-left mb-3 mb-sm-0">
-            <img id="logo" src={`data:image/png;base64,${logo.dataUrl}`} title="Furnitures Point" alt="Furnitures Point" height="75px" width="214px" />
+            <img id="logo" src={`data:image/png;base64,${logo.dataUrl}`} title="Furnitures Point" alt="Furnitures Point" height="100px" width="214px" />
           </div>
           <div className="col-sm-5 text-center text-sm-right">
-            <h4 className="text-7 mb-0">Invoice</h4>
+            <h4 className="text-7 mb-0">Cash Bill</h4>
           </div>
         </div>
         <hr />
@@ -51,12 +56,12 @@ function Print() {
               padding: '0 5px'
             }}
             >
-              {moment(billdate).format('DD MMM YYYY HH:mm A')}
+              {billdate ? moment(billdate).format('DD MMM YYYY') : ''}
             </span>
 
           </div>
           <div className="col-sm-6 text-sm-right">
-            <strong>Invoice No:</strong>
+            <strong>Bill No:</strong>
             <span style={{
               padding: '0 5px'
             }}
@@ -68,29 +73,37 @@ function Print() {
         </div>
         <hr />
         <div className="row">
-          <div className="col-sm-6 text-sm-right order-sm-1">
-            <strong>Pay To:</strong>
-            <address style={{ lineHeight: '30px' }}>
-              FURNITURE POINT
-              <br />
-              No: 2/39, Mount Poonamallee Road,
-              <br />
-              Kattupakkam, Chennai- 600056
-              <br />
-              Phone: 044-43851959, 8680914793
-            </address>
-          </div>
-          <div className="col-sm-6 order-sm-0">
-            <strong>Invoiced To:</strong>
+
+          <div
+            className="col-sm-6 text-sm-right order-sm-1 customers"
+          >
+            <strong>To</strong>
             <address style={{ lineHeight: '30px', overflowWrap: 'break-word' }}>
-              {fullName}
-              <br />
+              <div className="highlight">{fullName}</div>
               {address ? (
                 <>
                   {addr(address)}
                 </>
               ) : null}
-              {(phone1 || phone2) ? `Phone: ${phone1}, ${phone2}` : ''}
+              {gstin ? (
+                <div className="highlight">{`GSTIN: ${gstin}`}</div>
+              ) : ''}
+              {phoneno ? `Phone: ${phoneno}` : ''}
+            </address>
+          </div>
+          <div
+            className="col-sm-6 order-sm-0 customers"
+          >
+            <strong>From</strong>
+            <address style={{ lineHeight: '30px' }}>
+              <div className="highlight">FURNITURE POINT</div>
+              No: 2/39, Mount Poonamallee Road,
+              <br />
+              Kattupakkam, Chennai- 600056
+              <br />
+              <div className="highlight">GSTIN: 33GEFPS0279G1ZC</div>
+
+              Phone: 044-43851959, 8680914793
             </address>
           </div>
         </div>
@@ -101,11 +114,20 @@ function Print() {
           }}
         >
           <div className="card-body px-2">
-            <div className="table-responsive">
+            <div
+              className="table-responsive"
+              style={{
+                borderRadius: 20,
+              }}
+            >
               <table className="table">
                 <thead className="card-header px-2 py-0">
-                  <tr>
-                    <td className="col-3 border-0"><strong>Item</strong></td>
+                  <tr style={{
+                    background: 'red',
+                    color: 'white'
+                  }}
+                  >
+                    <td className="col-3 border-0"><strong>Particulars</strong></td>
                     <td className="col-2 text-center border-0"><strong>Rate</strong></td>
                     <td className="col-1 text-center border-0"><strong>Quantity</strong></td>
                     <td className="col-2 text-right border-0"><strong>Amount</strong></td>
@@ -174,10 +196,7 @@ function Print() {
         </div>
       </main>
       <footer
-        className="mt-4"
-        style={{
-          margin: 0
-        }}
+        className="mt-4 footer"
       >
         <div
           style={{
@@ -185,7 +204,8 @@ function Print() {
           }}
         >
           <div style={{
-            maxWidth: '400px'
+            maxWidth: '400px',
+            marginRight: 242.79
           }}
           >
             <p style={{
@@ -216,10 +236,10 @@ function Print() {
             }}
             >
               Authorized Signatory
-
             </div>
           </div>
         </div>
+        <div className="thanks">Thanks for your purchase</div>
       </footer>
     </div>
   );

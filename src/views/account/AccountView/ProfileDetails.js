@@ -24,19 +24,21 @@ const ProfileDetails = ({
   values = {},
   handleChange,
   profileErr,
+  isEdit,
   ...rest
 }) => {
   const classes = useStyles();
   const {
     fullName = '',
     address = '',
-    phone1 = '',
-    phone2 = '',
+    phoneno = '',
+    gstin = '',
     billno = '',
     billdate = ''
   } = values;
 
   const { noReq = '', dateReq = '', nameReq = '' } = profileErr;
+  const variant = isEdit ? 'filled' : 'outlined';
 
   return (
     <form
@@ -68,8 +70,11 @@ const ProfileDetails = ({
                 onChange={handleChange}
                 type="number"
                 value={billno}
-                variant="outlined"
+                variant={variant}
                 required
+                InputProps={{
+                  readOnly: isEdit
+                }}
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -84,9 +89,9 @@ const ProfileDetails = ({
               lg={6}
             >
               <TextField
-                id="datetime-local"
+                id="date"
                 label="Bill Date"
-                type="datetime-local"
+                type="date"
                 name="billdate"
                 onChange={handleChange}
                 value={billdate}
@@ -97,6 +102,10 @@ const ProfileDetails = ({
                 required
                 error={Boolean(dateReq)}
                 helperText={dateReq}
+                InputProps={{
+                  readOnly: isEdit
+                }}
+                variant={variant}
               />
             </Grid>
             <Grid
@@ -112,12 +121,15 @@ const ProfileDetails = ({
                 onChange={handleChange}
                 required
                 value={fullName}
-                variant="outlined"
+                variant={variant}
                 InputLabelProps={{
                   shrink: true,
                 }}
                 error={Boolean(nameReq)}
                 helperText={nameReq}
+                InputProps={{
+                  readOnly: isEdit
+                }}
               />
             </Grid>
 
@@ -132,30 +144,14 @@ const ProfileDetails = ({
                 name="address"
                 onChange={handleChange}
                 value={address}
-                variant="outlined"
+                variant={variant}
                 multiline
                 rows={2}
                 InputLabelProps={{
                   shrink: true,
                 }}
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={6}
-              lg={6}
-            >
-              <TextField
-                fullWidth
-                label="Phone Number 1"
-                name="phone1"
-                onChange={handleChange}
-                type="number"
-                value={phone1}
-                variant="outlined"
-                InputLabelProps={{
-                  shrink: true,
+                InputProps={{
+                  readOnly: isEdit
                 }}
               />
             </Grid>
@@ -167,14 +163,37 @@ const ProfileDetails = ({
             >
               <TextField
                 fullWidth
-                label="Phone Number 2"
-                name="phone2"
+                label="Phone Number"
+                name="phoneno"
                 onChange={handleChange}
-                type="number"
-                value={phone2}
-                variant="outlined"
+                value={phoneno}
+                variant={variant}
                 InputLabelProps={{
                   shrink: true,
+                }}
+                InputProps={{
+                  readOnly: isEdit
+                }}
+              />
+            </Grid>
+            <Grid
+              item
+              md={6}
+              xs={6}
+              lg={6}
+            >
+              <TextField
+                fullWidth
+                label="GSTIN"
+                name="gstin"
+                onChange={handleChange}
+                value={gstin}
+                variant={variant}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                InputProps={{
+                  readOnly: isEdit
                 }}
               />
             </Grid>
@@ -189,7 +208,8 @@ ProfileDetails.propTypes = {
   className: PropTypes.string,
   handleChange: PropTypes.func,
   values: PropTypes.object,
-  profileErr: PropTypes.object
+  profileErr: PropTypes.object,
+  isEdit: PropTypes.bool
 };
 
 export default ProfileDetails;

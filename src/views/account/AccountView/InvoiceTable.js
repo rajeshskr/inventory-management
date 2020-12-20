@@ -51,6 +51,7 @@ const InvoiceTable = ({
   handleSelectAll,
   handleSelectOne,
   selectedCustomerIds,
+  isEdit,
   ...rest
 }) => {
   const classes = useStyles();
@@ -64,23 +65,26 @@ const InvoiceTable = ({
         <>
           <PerfectScrollbar>
             <Box>
-              <TableContainer className={classes.table}>
+              <TableContainer className={classes.table} style={{ padding: '0 25px' }}>
                 <Table stickyHeader>
                   <TableHead>
                     <TableRow>
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={selectedCustomerIds.length === customers.length}
-                          color="primary"
-                          indeterminate={
+                      {!isEdit ? (
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            checked={selectedCustomerIds.length === customers.length}
+                            color="primary"
+                            indeterminate={
                       selectedCustomerIds.length > 0
                       && selectedCustomerIds.length < customers.length
                     }
-                          onChange={handleSelectAll}
-                        />
-                      </TableCell>
+                            onChange={handleSelectAll}
+                          />
+                        </TableCell>
+                      ) : undefined}
+
                       <TableCell>
-                        Item Name
+                        Particulars
                       </TableCell>
                       <TableCell>
                         Price
@@ -104,13 +108,17 @@ const InvoiceTable = ({
                             selected={selectedCustomerIds.indexOf(customer.id) !== -1}
                             className={classes.row}
                           >
-                            <TableCell padding="checkbox">
-                              <Checkbox
-                                checked={selectedCustomerIds.indexOf(index) !== -1}
-                                onChange={(event) => handleSelectOne(event, index)}
-                                value="true"
-                              />
-                            </TableCell>
+                            {!isEdit
+                              ? (
+                                <TableCell padding="checkbox">
+                                  <Checkbox
+                                    checked={selectedCustomerIds.indexOf(index) !== -1}
+                                    onChange={(event) => handleSelectOne(event, index)}
+                                    value="true"
+                                  />
+                                </TableCell>
+                              ) : undefined}
+
                             <TableCell align="left" style={{ overflowWrap: 'break-word', maxWidth: 250 }}>
                               {itemName}
                             </TableCell>

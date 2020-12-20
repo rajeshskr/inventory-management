@@ -384,7 +384,9 @@ h1, h2, h3, h4, h5, h6 {
 /*  Layouts
 /* =================================== */
 .invoice-container {
-  margin: 100px auto;
+  /* height: 1200px; */
+  position: relative;
+  margin: 100px auto 75px auto;
   /* padding: 70px; */
   max-width: 850px;
   background-color: #fff;
@@ -523,4 +525,51 @@ h1, h2, h3, h4, h5, h6 {
 
 .card{
   border: none
+}
+
+.thanks{
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  font-size: 23px;
+  letter-spacing: 1.4px;
+  color: #FF2C55;
+  text-align: center;
+  margin: 30px 0;
+  bottom: 0;
+}
+
+.pageborder {
+  position: fixed;
+  left: 40px;
+  right: 40px;
+  top: 20px;
+  bottom: 20px;
+  border-radius: 30px;
+  border: 2px solid #dc3545;
+  z-index: 1;
+}
+
+@media screen {
+  .footer {
+    display: none;
+  }
+}
+@media print {
+  .footer {
+    margin: 0;
+    position: fixed;
+    bottom: 0
+  }
+}
+
+.highlight{
+  color: #ff0707;
+}
+
+.customers{
+  flex: 0 0 48% !important;
+  max-width: 48% !important;
+  margin: 1% !important;
+  color: white;
+  background: skyblue;
+  border-radius: 20px
 }

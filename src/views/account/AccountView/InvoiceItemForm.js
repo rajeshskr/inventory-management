@@ -25,6 +25,7 @@ const InvoiceItemForm = ({
   open,
   handleClose,
   addItem,
+  isEdit,
   ...rest
 }) => {
   const classes = useStyles();
@@ -51,6 +52,7 @@ const InvoiceItemForm = ({
 
   const { itemName = '', price = '', quantity = '' } = values;
   const { nameReqErr } = err;
+  const variant = isEdit ? 'filled' : 'outlined';
 
   return (
     <Card>
@@ -81,12 +83,15 @@ const InvoiceItemForm = ({
                 onChange={handleChange}
                 required
                 value={itemName}
-                variant="outlined"
+                variant={variant}
                 InputLabelProps={{
                   shrink: true,
                 }}
                 error={Boolean(nameReqErr)}
                 helperText={nameReqErr}
+                InputProps={{
+                  readOnly: isEdit
+                }}
               />
             </Grid>
             <Grid
@@ -100,9 +105,12 @@ const InvoiceItemForm = ({
                 name="quantity"
                 onChange={handleChange}
                 value={quantity}
-                variant="outlined"
+                variant={variant}
                 InputLabelProps={{
                   shrink: true,
+                }}
+                InputProps={{
+                  readOnly: isEdit
                 }}
               />
             </Grid>
@@ -120,7 +128,10 @@ const InvoiceItemForm = ({
                 InputLabelProps={{
                   shrink: true,
                 }}
-                variant="outlined"
+                variant={variant}
+                InputProps={{
+                  readOnly: isEdit
+                }}
               />
             </Grid>
             <Grid
@@ -132,6 +143,7 @@ const InvoiceItemForm = ({
                 color="primary"
                 className={classes.add}
                 onClick={addInvoiceItem}
+                disabled={isEdit}
                 variant="outlined"
               >
                 Add
@@ -147,6 +159,7 @@ const InvoiceItemForm = ({
 };
 
 InvoiceItemForm.propTypes = {
+  isEdit: PropTypes.bool,
   className: PropTypes.string,
   open: PropTypes.bool,
   handleClose: PropTypes.func,

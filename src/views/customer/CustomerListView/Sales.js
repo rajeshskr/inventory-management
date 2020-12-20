@@ -58,7 +58,7 @@ const Sales = ({ billCounts, totalSales, dates }) => {
           </Typography>
         </CardContent>
       ) : (
-        <TableContainer style={{ maxHeight: 525 }}>
+        <TableContainer style={{ maxHeight: 525, padding: '0 25px' }}>
           <Table stickyHeader>
             <TableHead>
               <TableRow>

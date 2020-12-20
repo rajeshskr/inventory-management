@@ -20,8 +20,8 @@ import {
   TextField,
 } from '@material-ui/core';
 import DataContext from 'src/localforageUtils/DataContext';
-import { addr, currency } from 'src/utils';
-import { setPrintInvoice } from 'src/localforageUtils';
+import { currency } from 'src/utils';
+import { removePrintInvoice, setPrintInvoice } from 'src/localforageUtils';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -109,6 +109,7 @@ const Results = ({
     openDialog({
       description: 'Are you sure you want to remove all the bills?',
       onSuccess: () => {
+        removePrintInvoice();
         deleteInvoices(customers.map((obj) => obj.id));
         setSelectedCustomerIds([]);
         setFilterDate('');
@@ -117,6 +118,8 @@ const Results = ({
       confirmText: 'Yes'
     });
   };
+
+  const isAdmin = window.location.pathname === '/admin';
 
   return (
     <Card
@@ -132,22 +135,27 @@ const Results = ({
             >
               Add invoice
             </Button>
-            <Button
-              className={classes.deleteButton}
-              color="secondary"
-              onClick={deleteInvoiceEntries}
-              disabled={!selectedCustomerIds.length}
-            >
-              Delete
-            </Button>
-            <Button
-              className={classes.deleteButton}
-              color="secondary"
-              onClick={deleteAll}
-              disabled={!customers.length}
-            >
-              Delete All
-            </Button>
+            {isAdmin ? (
+              <>
+                <Button
+                  className={classes.deleteButton}
+                  color="secondary"
+                  onClick={deleteInvoiceEntries}
+                  disabled={!selectedCustomerIds.length}
+                >
+                  Delete
+                </Button>
+                <Button
+                  className={classes.deleteButton}
+                  color="secondary"
+                  onClick={deleteAll}
+                  disabled={!customers.length}
+                >
+                  Delete All
+                </Button>
+              </>
+            ) : undefined}
+
             <Button
               className={classes.deleteButton}
               color="secondary"
@@ -187,21 +195,23 @@ const Results = ({
           </Typography>
         </CardContent>
       ) : (
-        <TableContainer style={{ maxHeight: 525 }}>
+        <TableContainer style={{ maxHeight: 525, padding: '0 25px' }}>
           <Table stickyHeader>
             <TableHead>
               <TableRow>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={selectedCustomerIds.length === filtered.length}
-                    color="primary"
-                    indeterminate={
-                      selectedCustomerIds.length > 0
-                      && selectedCustomerIds.length < filtered.length
-                    }
-                    onChange={handleSelectAll}
-                  />
-                </TableCell>
+                {isAdmin ? (
+                  <TableCell padding="checkbox">
+                    <Checkbox
+                      checked={selectedCustomerIds.length === filtered.length}
+                      color="primary"
+                      indeterminate={
+                        selectedCustomerIds.length > 0
+                        && selectedCustomerIds.length < filtered.length
+                      }
+                      onChange={handleSelectAll}
+                    />
+                  </TableCell>
+                ) : undefined}
                 <TableCell>
                   Bill No.
                 </TableCell>
@@ -209,14 +219,14 @@ const Results = ({
                   Customer Name
                 </TableCell>
                 <TableCell>
-                  Phone 1
+                  Phone No.
                 </TableCell>
                 <TableCell>
-                  Phone 2
+                  GSTIN
                 </TableCell>
-                <TableCell>
+                {/* <TableCell>
                   Customer Address
-                </TableCell>
+                </TableCell> */}
                 <TableCell>
                   Total Bill
                 </TableCell>
@@ -241,14 +251,17 @@ const Results = ({
                     className={classes.row}
                     onClick={() => editInvoice(customer.id)}
                   >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        checked={selectedCustomerIds.indexOf(customer.id) !== -1}
-                        onChange={(event) => handleSelectOne(event, customer.id)}
-                        onClick={(e) => e.stopPropagation()}
-                        value="true"
-                      />
-                    </TableCell>
+                    {isAdmin ? (
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          checked={selectedCustomerIds.indexOf(customer.id) !== -1}
+                          onChange={(event) => handleSelectOne(event, customer.id)}
+                          onClick={(e) => e.stopPropagation()}
+                          value="true"
+                        />
+                      </TableCell>
+                    ) : undefined}
+
                     <TableCell style={{ overflowWrap: 'break-word', maxWidth: 75 }}>
                       {customer.billno}
                     </TableCell>
@@ -256,19 +269,19 @@ const Results = ({
                       {customer.fullName}
                     </TableCell>
                     <TableCell style={{ overflowWrap: 'break-word', maxWidth: 125 }}>
-                      {customer.phone1 || 'NA'}
+                      {customer.phoneno || 'NA'}
                     </TableCell>
                     <TableCell style={{ overflowWrap: 'break-word', maxWidth: 125 }}>
-                      {customer.phone2 || 'NA'}
+                      {customer.gstin || 'NA'}
                     </TableCell>
-                    <TableCell style={{ overflowWrap: 'break-word', maxWidth: 200 }}>
+                    {/* <TableCell style={{ overflowWrap: 'break-word', maxWidth: 200 }}>
                       {customer.address ? addr(customer.address) : 'NA'}
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell style={{ overflowWrap: 'break-word', maxWidth: 100 }}>
                       {currency(billtotal)}
                     </TableCell>
                     <TableCell style={{ overflowWrap: 'break-word', maxWidth: 140 }}>
-                      {moment(customer.billdate).format('DD MMM YYYY HH:mm A')}
+                      {moment(customer.billdate).format('DD MMM YYYY')}
                     </TableCell>
                     <TableCell style={{ width: 75 }}>
                       <Button
@@ -277,11 +290,11 @@ const Results = ({
                           e.stopPropagation && e.stopPropagation();
                           e.stopImmediatePropagation && e.stopImmediatePropagation();
                           setPrintInvoice(customer).then(() => {
-                            window.open(`/print?printId=${customer.id}`, '_blank');
+                            window.open(`/print?printId=${customer.id}`, '_blank', 'noopener');
                           });
                         }}
                       >
-                        Print
+                        Preview
                       </Button>
                     </TableCell>
                   </TableRow>
