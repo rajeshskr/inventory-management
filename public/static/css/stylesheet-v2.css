@@ -562,7 +562,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .highlight{
-  color: #ff0707;
+  color: #ffc107;
+  font-weight: bold;
 }
 
 .customers{
@@ -570,6 +571,6 @@ h1, h2, h3, h4, h5, h6 {
   max-width: 48% !important;
   margin: 1% !important;
   color: white;
-  background: skyblue;
+  background: red;
   border-radius: 20px
 }
