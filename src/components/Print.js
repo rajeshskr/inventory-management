@@ -39,10 +39,10 @@ function Print() {
       <header>
         <div className="row align-items-center">
           <div className="col-sm-7 text-center text-sm-left mb-3 mb-sm-0">
-            <img id="logo" src={`data:image/png;base64,${logo.dataUrl}`} title="Furnitures Point" alt="Furnitures Point" height="100px" width="214px" />
+            <img id="logo" src={`data:image/png;base64,${logo.dataUrl}`} title="Furnitures Point" alt="Furnitures Point" height="100px" width="250px" />
           </div>
           <div className="col-sm-5 text-center text-sm-right">
-            <h4 className="text-7 mb-0">Cash Bill</h4>
+            <h4 className="text-12 mb-0" style={{fontWeight: 'bold'}}>CASH BILL</h4>
           </div>
         </div>
         <hr />
@@ -75,11 +75,11 @@ function Print() {
         <div className="row">
 
           <div
-            className="col-sm-6 text-sm-right order-sm-1 customers"
+            className="col-sm-6 customers order-sm-0 "
           >
-            <strong>To</strong>
+            <strong className="highlight">TO</strong>
             <address style={{ lineHeight: '30px', overflowWrap: 'break-word' }}>
-              <div className="highlight">{fullName}</div>
+              <div className="highlight">{fullName ? fullName.toUpperCase() : ''}</div>
               {address ? (
                 <>
                   {addr(address)}
@@ -92,9 +92,9 @@ function Print() {
             </address>
           </div>
           <div
-            className="col-sm-6 order-sm-0 customers"
+            className="col-sm-6 customers text-sm-right order-sm-1"
           >
-            <strong>From</strong>
+            <strong className="highlight">FROM</strong>
             <address style={{ lineHeight: '30px' }}>
               <div className="highlight">FURNITURE POINT</div>
               No: 2/39, Mount Poonamallee Road,
@@ -123,14 +123,14 @@ function Print() {
               <table className="table">
                 <thead className="card-header px-2 py-0">
                   <tr style={{
-                    background: 'red',
+                    background: 'rgb(11 171 231)',
                     color: 'white'
                   }}
                   >
-                    <td className="col-3 border-0"><strong>Particulars</strong></td>
-                    <td className="col-2 text-center border-0"><strong>Rate</strong></td>
-                    <td className="col-1 text-center border-0"><strong>Quantity</strong></td>
-                    <td className="col-2 text-right border-0"><strong>Amount</strong></td>
+                    <td className="col-3 border-0" style={{fontWeight: 'bolder'}}><strong>PARTICULARS</strong></td>
+                    <td className="col-2 text-center border-0" style={{fontWeight: 'bolder'}}><strong>RATE</strong></td>
+                    <td className="col-1 text-center border-0" style={{fontWeight: 'bolder'}}><strong>QUANTITY</strong></td>
+                    <td className="col-2 text-right border-0" style={{fontWeight: 'bolder'}}><strong>AMOUNT</strong></td>
                   </tr>
                 </thead>
                 <tbody>
@@ -215,7 +215,7 @@ function Print() {
               <strong>NOTE :</strong>
 
             </p>
-            <div>Under Composition Scheme</div>
+            <div>Under Composition Scheme.</div>
             <ul>
               <li>Goods once sold cannot be returned</li>
               <li>No warranty for imported products</li>
@@ -232,7 +232,7 @@ function Print() {
           >
             <strong>For Furniture Point</strong>
             <div style={{
-              marginTop: '80px'
+              marginTop: '120px'
             }}
             >
               Authorized Signatory
