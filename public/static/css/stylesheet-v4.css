@@ -537,16 +537,7 @@ h1, h2, h3, h4, h5, h6 {
   bottom: 0;
 }
 
-.pageborder {
-  position: fixed;
-  left: 40px;
-  right: 40px;
-  top: 40px;
-  bottom: 40px;
-  border-radius: 30px;
-  border: 2px solid #dc3545;
-  z-index: 1;
-}
+
 
 @media screen {
   .footer {
@@ -572,6 +563,16 @@ h1, h2, h3, h4, h5, h6 {
     -webkit-border-radius: 6px;
     -o-border-radius: 6px;
     border-radius: 6px;
+  }
+  .pageborder {
+    position: fixed;
+    left: 40px;
+    right: 40px;
+    top: 40px;
+    bottom: 40px;
+    border-radius: 30px;
+    border: 2px solid #dc3545;
+    z-index: 1;
   }
 }
 
